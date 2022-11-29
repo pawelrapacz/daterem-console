@@ -11,21 +11,30 @@ std::vector < dr::Event* > s;
 
 int main(int argc, char *argv[])
 {
+    SetConsoleCP( 1250 );
+    SetConsoleOutputCP( 1250 );
+    setlocale( LC_ALL, "1250" );
+
     for (int i = 1; i < argc; i++)
     {
         if (std::string(argv[i]) == "--list" || std::string(argv[i]) == "-l")
         {
             dr::GetSavedEvents();
             dr::ListAllEvents();
-            return 0;
+            return EXIT_SUCCESS;
         }
         else if (std::string(argv[i]) == "--new" || std::string(argv[i]) == "-n")
         {
-            return 0;
+            s.push_back(new dr::Event(std::string(argv[i + 1]), argv[i + 2], argv[i + 3]));
+            s.back()->Save();
+            return EXIT_SUCCESS;
         }
         else if (std::string(argv[i]) == "-e")
         {
-            return 0;
+            return EXIT_SUCCESS;
+        }
+        else {
+            return EXIT_FAILURE;
         }
     }
     return EXIT_SUCCESS;

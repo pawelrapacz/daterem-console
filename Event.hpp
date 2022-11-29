@@ -21,7 +21,11 @@ namespace date_rem
         static unsigned short objCount;
         Event();
         Event(bool);
+        Event(std::string, std::string, std::string);
         ~Event();
+
+        void CheckDate(std::string);
+
         void SetDay();
         void SetMonth();
         void SetYear();
@@ -51,4 +55,5 @@ namespace date_rem
     void ExportAllEventsToBat();
     void DeleteEvent(unsigned short);
     unsigned short GetEventNr();
+    void SaveOneEvent();
 }

@@ -4,6 +4,7 @@
 #include <windows.h>
 #include <cmath>
 #include <limits>
+#include <cstdlib>
 #include "Event.hpp"
 
 namespace dr = date_rem;
@@ -63,6 +64,33 @@ dr::Event::Event(bool eYE)
     objCount++;
 }
 
+dr::Event::Event(std::string d, std::string t, std::string des)
+{
+    std::string con;
+    con = d.substr(0,2);
+    day = std::stoi(con);
+    con = d.substr(3, 2);
+    month = std::stoi(con);
+
+    if (d.length() > 6)
+    {
+        con = d.substr(6,4);
+        year = std::stoi(con);
+        everyYearEvent = false;
+    }
+    else {
+        year = 0;
+        everyYearEvent = true;
+    }
+
+    CheckDate(d);
+
+    title = t;
+    description = des;
+    DefineDate();
+    objCount++;
+}
+
 dr::Event::~Event()
 {
     // cout << "\n\nUsuni�to obiekt";
@@ -71,6 +99,52 @@ dr::Event::~Event()
 
 
 // METHODS
+
+void dr::Event::CheckDate(std::string d)
+{
+    bool exitStat = false;
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (day > 31 || day < 1) {
+        SetConsoleTextAttribute(hOut, 12);
+        std::clog << "Error! Wrong day " << endl;
+        exitStat= true;
+    }
+    if (month > 12 || month < 1) {
+        SetConsoleTextAttribute(hOut, 12);
+        std::clog << "Error! Wrong month " << endl;
+        exitStat = true;
+    }
+    if (!everyYearEvent)
+    {
+        if (year > 2100 || year < 2022) {
+            SetConsoleTextAttribute(hOut, 12);
+            std::clog << "Error! Wrong year " << endl;
+            exitStat = true;
+        }
+    }
+
+    if (exitStat)
+        exit(0);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void dr::Event::SetDay() {
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
