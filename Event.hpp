@@ -2,7 +2,6 @@
 
 #include <string>
 #include <fstream>
-#include <vector>
 
 namespace date_rem
 {
@@ -30,11 +29,8 @@ namespace date_rem
         void SetMonth();
         void SetYear();
         void DefineDate();
-        void ShowData();
         void ShowData(int);
-        void ChangeData();
         void Save();
-        void SaveBat();
     };
 
     static std::fstream rem;
@@ -42,18 +38,12 @@ namespace date_rem
     static std::ofstream bat;
     const std::string BAT = "DateRem.bat";
 
-    // UI FUNCTIONS
-    void DrawMenu();
-    void ListMenu();
-    char Input();
-    void Pause();
-
     // OTHER FUNCTIONS
     void GetSavedEvents();
     void SaveAllEvents();
     void ListAllEvents();
-    void ExportAllEventsToBat();
     void DeleteEvent(unsigned short);
-    unsigned short GetEventNr();
-    void SaveOneEvent();
+    unsigned short CheckEventNr(int);
+    void SaveEvent();
+    void ShowHelp();
 }

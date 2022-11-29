@@ -4,7 +4,6 @@
 #include <windows.h>
 #include <cmath>
 #include <limits>
-#include <cstdlib>
 #include "Event.hpp"
 
 namespace dr = date_rem;
@@ -106,19 +105,19 @@ void dr::Event::CheckDate(std::string d)
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     if (day > 31 || day < 1) {
         SetConsoleTextAttribute(hOut, 12);
-        std::clog << "Error! Wrong day " << endl;
+        std::clog << "Error! Wrong day format" << endl;
         exitStat= true;
     }
     if (month > 12 || month < 1) {
         SetConsoleTextAttribute(hOut, 12);
-        std::clog << "Error! Wrong month " << endl;
+        std::clog << "Error! Wrong month format" << endl;
         exitStat = true;
     }
     if (!everyYearEvent)
     {
         if (year > 2100 || year < 2022) {
             SetConsoleTextAttribute(hOut, 12);
-            std::clog << "Error! Wrong year " << endl;
+            std::clog << "Error! Wrong year format" << endl;
             exitStat = true;
         }
     }
@@ -126,25 +125,6 @@ void dr::Event::CheckDate(std::string d)
     if (exitStat)
         exit(0);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 void dr::Event::SetDay() {
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -329,91 +309,16 @@ void dr::Event::DefineDate() {
     remDescription = "W dniu " + fullDate + " zaplanowane jest: " + description;
 }
 
-void dr::Event::ShowData() {
-    system("cls");
-    cout << "Data: " << fullDate << endl;
-    cout << "Tytu�: " << title << endl;
-    cout << "Opis: " << description << endl;
-    cout << "Coroczne: ";
-    if(everyYearEvent)
-        cout << "tak" << endl;
-    else
-        cout << "nie" << endl;
-}
-
 void dr::Event::ShowData(int i) {
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     if (i % 2 == 0) {
         SetConsoleTextAttribute( hOut, 6);
-        cout << fullDate << " - " << title << " " << description << endl;
+        cout << i << " - " << fullDate << " - " << title << " " << description << endl;
     }
     else {
         SetConsoleTextAttribute( hOut, 7);
-        cout << fullDate << " - " << title << " " << description << endl;
+        cout << i << " - " << fullDate << " - " << title << " " << description << endl;
     }
-}
-
-void dr::Event::ChangeData() {
-    system("cls");
-    ShowData();
-    cout << "\n#######################################################\n";
-    cout << "1 - DZIE�\n";
-    cout << "2 - MIESI�C\n";
-    cout << "3 - ROK\n";
-    cout << "4 - TYTU�\n";
-    cout << "5 - OPIS\n";
-    cout << "6 - CZ�STO�� WYDARZENIA\n";
-    cout << "7 - WI�CEJ\n";
-    cout << "Q - WYJD�\n";
-    cout << "\n#######################################################\n\n";
-    // switch (Input())
-    // {
-    // case '1':
-    //     cout << "Podaj dzie�: "; SetDay();
-    //     DefineDate();
-    //     break;
-    // case '2':
-    //     cout << "\n\nPodaj miesi�c: "; SetMonth();
-    //     DefineDate();
-    //     break;
-    // case '3':
-    //     cout << "\n\nPodaj rok: "; SetYear();
-    //     DefineDate();
-    //     break;
-    // case '4':
-    //     std::cin.ignore();
-    //     cout << "\n\nPodaj tytu�: "; getline(std::cin, title);
-    //     break;
-    // case '5':
-    //     std::cin.ignore();
-    //     cout << "\n\nPodaj opis: "; getline(std::cin, description);
-    //     DefineDate();
-    //     break;
-    // case '6':
-    //     if (everyYearEvent) {
-    //         everyYearEvent = false;
-    //         cout << "\n\nPodaj rok: "; SetYear();
-    //     }
-    //     else
-    //         everyYearEvent = true;
-    //     break;
-    // case '7':
-    //     cout << "Podaj dzie�: "; SetDay();
-    //     cout << "\n\nPodaj miesi�c: "; SetMonth();
-    //     if (!everyYearEvent) 
-    //         cout << "\n\nPodaj rok: "; SetYear();
-    //     std::cin.ignore();
-    //     cout << "\n\nPodaj tytu�: "; getline(std::cin, title);
-    //     cout << "\n\nPodaj opis: "; getline(std::cin, description);
-    //     DefineDate();
-    //     break;
-    // case 'q':
-    //     break;
-    
-    // default:
-    //     ChangeData();
-    //     break;
-    // }
 }
 
 void dr::Event::Save() {
@@ -434,38 +339,4 @@ void dr::Event::Save() {
     rem << endl << description;
     rem << endl << everyYearEvent << endl;
     rem.close();
-}
-
-void dr::Event::SaveBat() {
-    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-    bat.open(BAT, std::ios::out | std::ios::app);
-    if (!bat.good()){
-        SetConsoleTextAttribute(hOut, 12);
-        std::clog << "B��d dodawania pliku!";
-        std::clog << "\nPrawdopodobne problemy:\n\t- plik nie istnieje lub zosta� usuni�ty\n\t- program nie posiada uprawnie� do pliku";
-        std::clog << "\n\nSpr�buj przywr�ci� plik lub nada� odpowiednie uprawnienia dost�pu.";
-        SetConsoleTextAttribute(hOut, 7);
-        //Pause();
-    }   
-    if (everyYearEvent) {
-        bat << endl << "if %everyYearEvent%==" << firstRemDate <<" echo msgbox\"" << remDescription << "\",vbInformation,\"" << title <<"\">Rem.vbs" << endl;
-        bat << "if %everyYearEvent%==" << firstRemDate <<" Rem.vbs" << endl;
-
-        bat << endl << "if %everyYearEvent%==" << secRemDate <<" echo msgbox\"" << remDescription << "\",vbInformation,\"" << title <<"\">Rem.vbs" << endl;
-        bat << "if %everyYearEvent%==" << secRemDate <<" Rem.vbs" << endl;
-
-        bat << endl << "if %everyYearEvent%==" << fullDate <<" echo msgbox\"" << description << "\",vbInformation,\"" << title <<"\">Rem.vbs" << endl;
-        bat << "if %everyYearEvent%==" << fullDate <<" Rem.vbs" << endl;
-    }
-    else {
-        bat << endl << "if %oneEvent%==" << firstRemDate <<" echo msgbox\"" << remDescription << "\",vbInformation,\"" << title <<"\">Rem.vbs" << endl;
-        bat << "if %oneEvent%==" << firstRemDate <<" Rem.vbs" << endl;
-
-        bat << endl << "if %oneEvent%==" << secRemDate <<" echo msgbox\"" << remDescription << "\",vbInformation,\"" << title <<"\">Rem.vbs" << endl;
-        bat << "if %oneEvent%==" << secRemDate <<" Rem.vbs" << endl;
-
-        bat << endl << "if %oneEvent%==" << fullDate <<" echo msgbox\"" << description << "\",vbInformation,\"" << title <<"\">Rem.vbs" << endl;
-        bat << "if %oneEvent%==" << fullDate <<" Rem.vbs" << endl;
-    }
-    bat.close();
 }
