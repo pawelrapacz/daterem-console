@@ -12,34 +12,46 @@ std::vector < dr::Event* > s;
 
 int main(int argc, char *argv[])
 {
-    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleCP( 1250 );
+    SetConsoleOutputCP( 1250 );
+    setlocale( LC_ALL, "1250" );
 
     for (int i = 1; i < argc; i++)
     {
-        if (std::string(argv[i]) == "--list" || std::string(argv[i]) == "-l")
+        if (std::string(argv[i]) == "--help" || std::string(argv[i]) == "-h")
+        {
+            dr::ShowHelp();
+            return EXIT_SUCCESS;
+        }
+
+        else if (std::string(argv[i]) == "--version" || std::string(argv[i]) == "-v")
+        {
+            std::cout << "daterem 1.0";
+            return EXIT_SUCCESS;
+        }
+
+        else if (std::string(argv[i]) == "--list" || std::string(argv[i]) == "-l")
         {
             dr::GetSavedEvents();
             dr::ListAllEvents();
             return EXIT_SUCCESS;
         }
+
         else if (std::string(argv[i]) == "--check" || std::string(argv[i]) == "-c")
         {
             dr::GetSavedEvents();
             dr::CheckEvents();
             return EXIT_SUCCESS;
         }
+
         else if (std::string(argv[i]) == "--new" || std::string(argv[i]) == "-n")
         {
             s.push_back(new dr::Event(std::string(argv[i + 1]), argv[i + 2], argv[i + 3]));
+            if (argc > 5 && (std::string(argv[i - 1]) == "-e" || std::string(argv[i + 4]) == "-e")) s.back()->SetToEveryYearEvent();
             s.back()->Save();
             return EXIT_SUCCESS;
         }
-        else if (std::string(argv[i]) == "-e")
-        {
-            dr::GetSavedEvents();
-            dr::CheckEvents();
-            return EXIT_SUCCESS;
-        }
+
         else if (std::string(argv[i]) == "--delete")
         {
             dr::GetSavedEvents();
@@ -47,18 +59,17 @@ int main(int argc, char *argv[])
             dr::SaveAllEvents();
             return EXIT_SUCCESS;
         }
-        else if (std::string(argv[i]) == "--help" || std::string(argv[i]) == "-h")
-        {
-            dr::ShowHelp();
-            return EXIT_SUCCESS;
-        }
+
         else
         {
-            SetConsoleTextAttribute(hOut, 12);
-            std::clog << "Error! No such argument" << std::endl;
-            SetConsoleTextAttribute(hOut, 7);
-            dr::ShowHelp();
-            return EXIT_FAILURE;
+            if (!(std::string(argv[i]) == "-e" && (std::string(argv[i + 1]) == "--new" || std::string(argv[i + 1]) == "-n")))
+            {
+                SetConsoleTextAttribute(dr::hOut, 12);
+                std::clog << "Error! No such argument" << std::endl;
+                SetConsoleTextAttribute(dr::hOut, 7);
+                dr::ShowHelp();
+                return EXIT_FAILURE;
+            }
         }
     }
     return EXIT_SUCCESS;
@@ -100,10 +111,9 @@ void dr::SaveAllEvents() {
     rem.open(REMINDERS, std::ios::out | std::ios::trunc);
     if (!rem.good()){
         SetConsoleTextAttribute(hOut, 12);
-        std::clog << "B��d tworzenia pliku!";
-        std::clog << "\nPrawdopodobne problemy:\n\t- program nie posiada uprawnie� do obecnego folderu";
-        std::clog << "\nSpr�buj nada� odpowiednie uprawnienia dost�pu.";
+        std::clog << "Error! Cannot open the save file, check permission settings in the instalation directory.";
         SetConsoleTextAttribute(hOut, 7);
+        return;
     }
     rem.close();
     for (int i = 0; i < dr::Event::objCount; i++) {
@@ -123,11 +133,10 @@ void dr::GetSavedEvents() {
     rem.open(REMINDERS, std::ios::in);
     if (!rem.good()){
         SetConsoleTextAttribute(hOut, 12);
-        std::clog << "B��d dodawania pliku!";
-        std::clog << "\nPrawdopodobne problemy:\n\t- plik nie istnieje lub zosta� usuni�ty\n\t- program nie posiada uprawnie� do pliku";
-        std::clog << "\n\nSpr�buj przywr�ci� plik lub nada� odpowiednie uprawnienia dost�pu.";
-        std::clog << "\n*Je�li program zosta� uruchomiony po raz pierwszy nale�y kontynuowa� normalnie, plik zostanie utworzony automatycznie.";
+        std::clog << "Error! Cannot open the save file, check permission settings in the instalation directory." << std::endl;
+        std::clog << "Also after the instalation there are no reminders, create one.";
         SetConsoleTextAttribute(hOut, 7);
+        return;
     }
     while (getline(rem, line)) {
         if (!line.empty()) numOfLines++;

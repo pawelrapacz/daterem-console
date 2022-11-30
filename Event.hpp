@@ -30,6 +30,7 @@ namespace date_rem
         void ShowData(int);
         void Save();
         void Check(bool);
+        void SetToEveryYearEvent();
     };
 
     static HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);

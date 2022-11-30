@@ -19,11 +19,10 @@ dr::Event::Event()
     rem.open(REMINDERS, std::ios::in);
     if (!rem.good()){
         SetConsoleTextAttribute(hOut, 12);
-        std::clog << "B��d dodawania pliku!";
-        std::clog << "\nPrawdopodobne problemy:\n\t- plik nie istnieje lub zosta� usuni�ty\n\t- program nie posiada uprawnie� do pliku";
-        std::clog << "\n\nSpr�buj przywr�ci� plik lub nada� odpowiednie uprawnienia dost�pu.";
-        std::clog << "\n*Je�li program zosta� uruchomiony po raz pierwszy nale�y kontynuowa� normalnie, plik zostanie utworzony automatycznie.";
+        std::clog << "Error! Cannot open the save file, check permission settings in the instalation directory." << std::endl;
+        std::clog << "Also after the instalation there are no reminders, create one.";
         SetConsoleTextAttribute(hOut, 7);
+        exit(EXIT_FAILURE);
     }
     short lineNum = objCount * 6 + 1;
     short actualLine = 1;
@@ -120,11 +119,11 @@ void dr::Event::Check(bool e)
 void dr::Event::ShowData(int i) {
     if (i % 2 == 0) {
         SetConsoleTextAttribute( hOut, 6);
-        cout << i << " - " << fullDate << " - " << title << " " << description << endl;
+        cout << i << " - " << fullDate << " - " << title << " - " << description << endl;
     }
     else {
         SetConsoleTextAttribute( hOut, 7);
-        cout << i << " - " << fullDate << " - " << title << " " << description << endl;
+        cout << i << " - " << fullDate << " - " << title << " - " << description << endl;
     }
 }
 
@@ -151,7 +150,11 @@ void dr::Event::CheckDate(std::string d)
     }
 
     if (exitStat)
-        exit(EXIT_SUCCESS);
+        exit(EXIT_FAILURE);
+}
+
+void dr::Event::SetToEveryYearEvent(){
+    everyYearEvent = true;
 }
 
 void dr::Event::DefineDate() {
@@ -292,17 +295,16 @@ void dr::Event::DefineDate() {
 
 
     // defining remDescription
-    remDescription = "W dniu " + fullDate + " zaplanowane jest: " + description;
+    remDescription = "In day" + fullDate + " zaplanowane jest: " + description;
 }
 
 void dr::Event::Save() {
     rem.open(REMINDERS, std::ios::out | std::ios::app);
     if (!rem.good()){
         SetConsoleTextAttribute(hOut, 12);
-        std::clog << "B��d dodawania pliku!";
-        std::clog << "\nPrawdopodobne problemy:\n\t- plik nie istnieje lub zosta� usuni�ty\n\t- program nie posiada uprawnie� do pliku";
-        std::clog << "\n\nSpr�buj przywr�ci� plik lub nada� odpowiednie uprawnienia dost�pu.";
+        std::clog << "Error! Cannot open the save file, check permission settings in the instalation directory.";
         SetConsoleTextAttribute(hOut, 7);
+        exit(EXIT_FAILURE);
     }
     rem << day;
     rem << endl << month;
