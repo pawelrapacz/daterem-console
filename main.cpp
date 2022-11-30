@@ -1,9 +1,9 @@
 #include <iostream>
 #include <vector>
 #include <windows.h>
-#include <limits>
 #include <string>
 #include <fstream>
+#include <ctime>
 #include "Event.hpp"
 
 namespace dr = date_rem;
@@ -12,9 +12,6 @@ std::vector < dr::Event* > s;
 
 int main(int argc, char *argv[])
 {
-    SetConsoleCP( 1250 );
-    SetConsoleOutputCP( 1250 );
-    setlocale( LC_ALL, "1250" );
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 
     for (int i = 1; i < argc; i++)
@@ -25,6 +22,12 @@ int main(int argc, char *argv[])
             dr::ListAllEvents();
             return EXIT_SUCCESS;
         }
+        else if (std::string(argv[i]) == "--check" || std::string(argv[i]) == "-c")
+        {
+            dr::GetSavedEvents();
+            dr::CheckEvents();
+            return EXIT_SUCCESS;
+        }
         else if (std::string(argv[i]) == "--new" || std::string(argv[i]) == "-n")
         {
             s.push_back(new dr::Event(std::string(argv[i + 1]), argv[i + 2], argv[i + 3]));
@@ -33,6 +36,8 @@ int main(int argc, char *argv[])
         }
         else if (std::string(argv[i]) == "-e")
         {
+            dr::GetSavedEvents();
+            dr::CheckEvents();
             return EXIT_SUCCESS;
         }
         else if (std::string(argv[i]) == "--delete")
@@ -42,11 +47,15 @@ int main(int argc, char *argv[])
             dr::SaveAllEvents();
             return EXIT_SUCCESS;
         }
-        else if (std::string(argv[i]) == "--help" || std::string(argv[i]) == "-h") dr::ShowHelp();
+        else if (std::string(argv[i]) == "--help" || std::string(argv[i]) == "-h")
+        {
+            dr::ShowHelp();
+            return EXIT_SUCCESS;
+        }
         else
         {
             SetConsoleTextAttribute(hOut, 12);
-            std::clog << "Error! Wrong argument" << std::endl;
+            std::clog << "Error! No such argument" << std::endl;
             SetConsoleTextAttribute(hOut, 7);
             dr::ShowHelp();
             return EXIT_FAILURE;
@@ -119,7 +128,6 @@ void dr::GetSavedEvents() {
         std::clog << "\n\nSpr�buj przywr�ci� plik lub nada� odpowiednie uprawnienia dost�pu.";
         std::clog << "\n*Je�li program zosta� uruchomiony po raz pierwszy nale�y kontynuowa� normalnie, plik zostanie utworzony automatycznie.";
         SetConsoleTextAttribute(hOut, 7);
-        //Pause();
     }
     while (getline(rem, line)) {
         if (!line.empty()) numOfLines++;
@@ -130,4 +138,35 @@ void dr::GetSavedEvents() {
     for (int i = 0; i < (numOfLines / 6); i++) {
         s.push_back(new dr::Event);
     }
+}
+
+void dr::CheckEvents()
+{
+    std::cout << "[" << dr::GetLocalDate() << "]" << std::endl << std::endl;
+    bool even = false;
+    for (int i = 0; i < dr::Event::objCount; i++)
+    {
+        s[i]->Check(&even);
+    }
+
+    if (!dr::Event::anyEvent)
+        std::cout << "No reminders scheduled for today";
+}
+
+std::string dr::GetLocalDate()
+{
+    std::string date;
+    if (dr::ltm->tm_mday <= 9)
+        date = "0" + std::to_string(dr::ltm->tm_mday) + ".";
+    else
+        date = std::to_string(dr::ltm->tm_mday) + ".";
+
+    if (dr::ltm->tm_mon + 1 <= 9)
+        date += "0" + std::to_string(dr::ltm->tm_mon + 1);
+    else
+        date += std::to_string(dr::ltm->tm_mon + 1);
+
+    date += "." + std::to_string(dr::ltm->tm_year + 1900);
+
+    return date;
 }

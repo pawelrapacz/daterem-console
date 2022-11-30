@@ -1,5 +1,6 @@
 #pragma once
 
+#include <windows.h>
 #include <string>
 #include <fstream>
 
@@ -17,21 +18,24 @@ namespace date_rem
         std::string firstRemDate, secRemDate;
         bool everyYearEvent;
     public:
+        static bool anyEvent;
         static unsigned short objCount;
         Event();
-        Event(bool);
         Event(std::string, std::string, std::string);
         ~Event();
 
         void CheckDate(std::string);
 
-        void SetDay();
-        void SetMonth();
-        void SetYear();
         void DefineDate();
         void ShowData(int);
         void Save();
+        void Check(bool);
     };
+
+    static HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    static const time_t now = time(0);
+    static const tm *ltm = localtime(&now);
 
     static std::fstream rem;
     const std::string REMINDERS = "reminders";
@@ -44,6 +48,7 @@ namespace date_rem
     void ListAllEvents();
     void DeleteEvent(unsigned short);
     unsigned short CheckEventNr(int);
-    void SaveEvent();
     void ShowHelp();
+    void CheckEvents();
+    std::string GetLocalDate();
 }

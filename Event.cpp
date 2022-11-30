@@ -3,19 +3,19 @@
 #include <string>
 #include <windows.h>
 #include <cmath>
-#include <limits>
+#include <ctime>
 #include "Event.hpp"
 
 namespace dr = date_rem;
 using std::cout, std::endl;
 
 unsigned short dr::Event::objCount = 0;
+bool dr::Event::anyEvent = false;
 
 // CONSTRUCTORS / DESTRUCTOR
 
 dr::Event::Event()
 {
-    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     rem.open(REMINDERS, std::ios::in);
     if (!rem.good()){
         SetConsoleTextAttribute(hOut, 12);
@@ -24,7 +24,6 @@ dr::Event::Event()
         std::clog << "\n\nSpr�buj przywr�ci� plik lub nada� odpowiednie uprawnienia dost�pu.";
         std::clog << "\n*Je�li program zosta� uruchomiony po raz pierwszy nale�y kontynuowa� normalnie, plik zostanie utworzony automatycznie.";
         SetConsoleTextAttribute(hOut, 7);
-        //Pause();
     }
     short lineNum = objCount * 6 + 1;
     short actualLine = 1;
@@ -42,23 +41,6 @@ dr::Event::Event()
         actualLine++;
     }
     rem.close();
-    DefineDate();
-    objCount++;
-}
-
-dr::Event::Event(bool eYE)
-{
-    system("cls");
-    cout << "Podaj dzie�: "; SetDay();
-    cout << "\n\nPodaj miesi�c: "; SetMonth();
-    if (!eYE) {
-        cout << "\n\nPodaj rok: "; SetYear();
-    }
-    else year = 0;
-    std::cin.ignore();
-    cout << "\n\nPodaj tytu�: "; std::getline(std::cin, title);
-    cout << "\n\nPodaj opis: "; std::getline(std::cin, description);
-    everyYearEvent = eYE;
     DefineDate();
     objCount++;
 }
@@ -99,10 +81,56 @@ dr::Event::~Event()
 
 // METHODS
 
+void dr::Event::Check(bool e)
+{
+    bool today = false;
+    if (everyYearEvent)
+    {
+        if (day == ltm->tm_mday && month == ltm->tm_mon + 1)
+        {
+            today = true;
+            anyEvent = true;
+        }
+    }
+    else
+    {
+        if (day == ltm->tm_mday && month == ltm->tm_mon + 1 && year == ltm->tm_year + 1900)
+        {
+            today = true;
+            anyEvent = true;
+        }
+    }
+
+    if (today)
+    {
+        if (e)
+        { 
+            SetConsoleTextAttribute( hOut, 6);
+            e = false;
+        }
+        else
+        {
+            SetConsoleTextAttribute( hOut, 7);
+            e = true;
+        }
+        cout << title << " " << description << endl;
+    }
+}
+
+void dr::Event::ShowData(int i) {
+    if (i % 2 == 0) {
+        SetConsoleTextAttribute( hOut, 6);
+        cout << i << " - " << fullDate << " - " << title << " " << description << endl;
+    }
+    else {
+        SetConsoleTextAttribute( hOut, 7);
+        cout << i << " - " << fullDate << " - " << title << " " << description << endl;
+    }
+}
+
 void dr::Event::CheckDate(std::string d)
 {
     bool exitStat = false;
-    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     if (day > 31 || day < 1) {
         SetConsoleTextAttribute(hOut, 12);
         std::clog << "Error! Wrong day format" << endl;
@@ -123,49 +151,7 @@ void dr::Event::CheckDate(std::string d)
     }
 
     if (exitStat)
-        exit(0);
-}
-
-void dr::Event::SetDay() {
-    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-    std::cin >> day;
-    if (std::cin.fail() || day > 31 || day < 1) {
-        SetConsoleTextAttribute(hOut, 12);
-        cout << endl << "B��d wprowadzonych danych! Wprowad� je ponownie" << endl;
-        cout << ">";
-        SetConsoleTextAttribute(hOut, 7);
-        std::cin.clear();
-        std::cin.ignore( std::numeric_limits < std::streamsize >::max(), '\n' ); // works, no error
-        SetDay();
-    }
-}
-
-void dr::Event::SetMonth() {
-    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-    std::cin >> month;
-    if (std::cin.fail() || month > 12 || month < 1) {
-        SetConsoleTextAttribute(hOut, 12);
-        cout << endl << "B��d wprowadzonych danych! Wprowad� je ponownie" << endl;
-        cout << ">";
-        SetConsoleTextAttribute(hOut, 7);
-        std::cin.clear();
-        std::cin.ignore( std::numeric_limits < std::streamsize >::max(), '\n' ); // works, no error
-        SetMonth();
-    }
-}
-
-void dr::Event::SetYear() {
-    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-    std::cin >> year;
-    if (std::cin.fail()|| year > 2100 || year < 2022) {
-        SetConsoleTextAttribute(hOut, 12);
-        cout << endl << "B��d wprowadzonych danych! Wprowad� je ponownie" << endl;
-        cout << ">";
-        SetConsoleTextAttribute(hOut, 7);
-        std::cin.clear();
-        std::cin.ignore( std::numeric_limits < std::streamsize >::max(), '\n' ); // works, no error
-        SetYear();
-    }
+        exit(EXIT_SUCCESS);
 }
 
 void dr::Event::DefineDate() {
@@ -309,20 +295,7 @@ void dr::Event::DefineDate() {
     remDescription = "W dniu " + fullDate + " zaplanowane jest: " + description;
 }
 
-void dr::Event::ShowData(int i) {
-    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-    if (i % 2 == 0) {
-        SetConsoleTextAttribute( hOut, 6);
-        cout << i << " - " << fullDate << " - " << title << " " << description << endl;
-    }
-    else {
-        SetConsoleTextAttribute( hOut, 7);
-        cout << i << " - " << fullDate << " - " << title << " " << description << endl;
-    }
-}
-
 void dr::Event::Save() {
-    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     rem.open(REMINDERS, std::ios::out | std::ios::app);
     if (!rem.good()){
         SetConsoleTextAttribute(hOut, 12);
@@ -330,7 +303,6 @@ void dr::Event::Save() {
         std::clog << "\nPrawdopodobne problemy:\n\t- plik nie istnieje lub zosta� usuni�ty\n\t- program nie posiada uprawnie� do pliku";
         std::clog << "\n\nSpr�buj przywr�ci� plik lub nada� odpowiednie uprawnienia dost�pu.";
         SetConsoleTextAttribute(hOut, 7);
-        //Pause();
     }
     rem << day;
     rem << endl << month;
