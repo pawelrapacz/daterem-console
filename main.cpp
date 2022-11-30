@@ -20,18 +20,24 @@ int main(int argc, char *argv[])
     {
         if (std::string(argv[i]) == "--help" || std::string(argv[i]) == "-h")
         {
+            if (argc != 2) dr::ArgErr();
+
             dr::ShowHelp();
             return EXIT_SUCCESS;
         }
 
         else if (std::string(argv[i]) == "--version" || std::string(argv[i]) == "-v")
         {
+            if (argc != 2) dr::ArgErr();
+
             std::cout << "daterem 1.0";
             return EXIT_SUCCESS;
         }
 
         else if (std::string(argv[i]) == "--list" || std::string(argv[i]) == "-l")
         {
+            if (argc != 2) dr::ArgErr();
+
             dr::GetSavedEvents();
             dr::ListAllEvents();
             return EXIT_SUCCESS;
@@ -39,6 +45,8 @@ int main(int argc, char *argv[])
 
         else if (std::string(argv[i]) == "--check" || std::string(argv[i]) == "-c")
         {
+            if (argc != 2) dr::ArgErr();
+
             dr::GetSavedEvents();
             dr::CheckEvents();
             return EXIT_SUCCESS;
@@ -46,33 +54,38 @@ int main(int argc, char *argv[])
 
         else if (std::string(argv[i]) == "--new" || std::string(argv[i]) == "-n")
         {
+            if (argc < 5 || argc > 6) dr::ArgErr();
+
             s.push_back(new dr::Event(std::string(argv[i + 1]), argv[i + 2], argv[i + 3]));
+
             if (argc > 5 && (std::string(argv[i - 1]) == "-e" || std::string(argv[i + 4]) == "-e")) s.back()->SetToEveryYearEvent();
+
             s.back()->Save();
             return EXIT_SUCCESS;
         }
 
         else if (std::string(argv[i]) == "--delete")
         {
+            if (argc != 3) dr::ArgErr();
+
             dr::GetSavedEvents();
             dr::DeleteEvent(dr::CheckEventNr(std::stoi(argv[i + 1])));
             dr::SaveAllEvents();
             return EXIT_SUCCESS;
         }
 
-        else
-        {
-            if (!(std::string(argv[i]) == "-e" && (std::string(argv[i + 1]) == "--new" || std::string(argv[i + 1]) == "-n")))
-            {
-                SetConsoleTextAttribute(dr::hOut, 12);
-                std::clog << "Error! No such argument" << std::endl;
-                SetConsoleTextAttribute(dr::hOut, 7);
-                dr::ShowHelp();
-                return EXIT_FAILURE;
-            }
-        }
+        else dr::ArgErr();
     }
     return EXIT_SUCCESS;
+}
+
+void dr::ArgErr()
+{
+    SetConsoleTextAttribute(dr::hOut, 12);
+    std::clog << "Error! Incorrect syntax." << std::endl << std::endl;
+    SetConsoleTextAttribute(dr::hOut, 7);
+    dr::ShowHelp();
+    exit(EXIT_FAILURE);
 }
 
 void dr::ShowHelp()

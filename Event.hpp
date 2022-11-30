@@ -52,4 +52,5 @@ namespace date_rem
     void ShowHelp();
     void CheckEvents();
     std::string GetLocalDate();
+    void ArgErr();
 }
