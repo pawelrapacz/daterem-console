@@ -126,7 +126,7 @@ void dr::SaveAllEvents() {
         SetConsoleTextAttribute(hOut, 12);
         std::clog << "Error! Cannot open the save file, check permission settings in the instalation directory.";
         SetConsoleTextAttribute(hOut, 7);
-        return;
+        exit(EXIT_FAILURE);
     }
     rem.close();
     for (int i = 0; i < dr::Event::objCount; i++) {
@@ -149,7 +149,7 @@ void dr::GetSavedEvents() {
         std::clog << "Error! Cannot open the save file, check permission settings in the instalation directory." << std::endl;
         std::clog << "Also after the instalation there are no reminders, create one.";
         SetConsoleTextAttribute(hOut, 7);
-        return;
+        exit(EXIT_FAILURE);
     }
     while (getline(rem, line)) {
         if (!line.empty()) numOfLines++;

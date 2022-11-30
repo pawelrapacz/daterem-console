@@ -63,7 +63,7 @@ dr::Event::Event(std::string d, std::string t, std::string des)
         everyYearEvent = true;
     }
 
-    CheckDate(d);
+    CheckDateFormat(d);
 
     title = t;
     description = des;
@@ -127,30 +127,26 @@ void dr::Event::ShowData(int i) {
     }
 }
 
-void dr::Event::CheckDate(std::string d)
+void dr::Event::CheckDateFormat(std::string d)
 {
     bool exitStat = false;
-    if (day > 31 || day < 1) {
-        SetConsoleTextAttribute(hOut, 12);
-        std::clog << "Error! Wrong day format" << endl;
-        exitStat= true;
-    }
-    if (month > 12 || month < 1) {
-        SetConsoleTextAttribute(hOut, 12);
-        std::clog << "Error! Wrong month format" << endl;
-        exitStat = true;
-    }
-    if (!everyYearEvent)
-    {
-        if (year > 2100 || year < 2022) {
-            SetConsoleTextAttribute(hOut, 12);
-            std::clog << "Error! Wrong year format" << endl;
-            exitStat = true;
-        }
+
+    if (!(d.length() == 5 || d.length() == 10)) exitStat = true;
+
+    if (!isdigit(d[0]) || !isdigit(d[1]) || !isdigit(d[3]) || !isdigit(d[4])) exitStat = true;
+
+    if (day > 31 || day < 1 || month > 12 || month < 1) exitStat = true;
+
+    if (!everyYearEvent) {
+        if (year > 2100 || year < 2022) exitStat = true;
+        if (!isdigit(d[6]) || !isdigit(d[7]) || !isdigit(d[8]) || !isdigit(d[9])) exitStat = true;
     }
 
-    if (exitStat)
+    if (exitStat) {
+        SetConsoleTextAttribute(hOut, 12);
+        std::clog << "Error! Wrong date format." << endl;
         exit(EXIT_FAILURE);
+    }
 }
 
 void dr::Event::SetToEveryYearEvent(){

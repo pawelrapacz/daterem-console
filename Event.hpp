@@ -24,7 +24,7 @@ namespace date_rem
         Event(std::string, std::string, std::string);
         ~Event();
 
-        void CheckDate(std::string);
+        void CheckDateFormat(std::string);
 
         void DefineDate();
         void ShowData(int);
