@@ -1,0 +1,33 @@
+daterem - create reminders
+
+SYNOPSIS
+        daterem [OPTION] [PROPERTIES]
+
+DESCRIPTION
+        Mandatory arguments to long options are mandatory for short options too.
+
+        -h, --help
+            Prints help.
+
+        -v, --version
+            Prints version information.
+
+        -l, --list
+            List all scheduled reminders.
+        
+        -c, --check
+            Shows all reminders scheduled for current day.
+        
+        -n, --new [date] [title] [description]
+            Creates new reminder for given date, date format: DD.MM for every year reminder and DD.MM.YYYY for sigle reminder.
+
+        -e [number]
+            Converts reminder with indicated number to be every year (use --list to see the numeration).
+
+            Used with -n or --new e.g. (-e --new ...) forces created reminder to be every year, if used like this don't set number property.
+
+        --delete [number]
+            Deletes reminder with indicated number (use --list to see the numeration).
+
+        -o, --delete-outdated
+            Deletes all reminders that expired, does not apply to every year reminders.
