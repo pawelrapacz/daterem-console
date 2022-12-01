@@ -73,7 +73,7 @@ dr::Event::Event(std::string d, std::string t, std::string des)
 
 dr::Event::~Event()
 {
-    // cout << "\n\nUsuni�to obiekt";
+    cout << "\nUsuni�to obiekt";
     objCount--;
 }
 
@@ -138,7 +138,7 @@ void dr::Event::CheckDateFormat(std::string d)
     if (day > 31 || day < 1 || month > 12 || month < 1) exitStat = true;
 
     if (!everyYearEvent) {
-        if (year > 2100 || year < 2022) exitStat = true;
+        //if (year > 2100 || year < 2022) exitStat = true;
         if (!isdigit(d[6]) || !isdigit(d[7]) || !isdigit(d[8]) || !isdigit(d[9])) exitStat = true;
     }
 
@@ -151,6 +151,24 @@ void dr::Event::CheckDateFormat(std::string d)
 
 void dr::Event::SetToEveryYearEvent(){
     everyYearEvent = true;
+}
+
+bool dr::Event::CheckOutOfDate()
+{
+    bool outDated = false;
+
+    if (!everyYearEvent)
+    {
+        if (year < ltm->tm_year + 1900) outDated = true;
+        if (month < ltm->tm_mon + 1 && year == ltm->tm_year + 1900) outDated = true;
+        if (day < ltm->tm_mday && month == ltm->tm_mon + 1 && year == ltm->tm_year + 1900) outDated = true;
+    }
+    if (outDated)
+    {
+        cout << fullDate << " - " << title << " - " << description << endl;
+    }
+
+    return outDated;
 }
 
 void dr::Event::DefineDate() {

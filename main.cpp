@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 
             s.push_back(new dr::Event(std::string(argv[i + 1]), argv[i + 2], argv[i + 3]));
 
-            if (argc > 5 && (std::string(argv[i - 1]) == "-e" || std::string(argv[i + 4]) == "-e")) s.back()->SetToEveryYearEvent();
+            if (argc == 6 && (std::string(argv[i - 1]) == "-e" || std::string(argv[i + 4]) == "-e")) s.back()->SetToEveryYearEvent();
 
             s.back()->Save();
             return EXIT_SUCCESS;
@@ -74,17 +74,29 @@ int main(int argc, char *argv[])
             return EXIT_SUCCESS;
         }
 
-        else dr::ArgErr();
+        else if (std::string(argv[i]) == "--delete-outdated" || std::string(argv[i]) == "-o")
+        {
+            if (argc != 2) dr::ArgErr();
+            dr::GetSavedEvents();
+            dr::DeleteOutOfDate();
+            dr::SaveAllEvents();
+            return EXIT_SUCCESS;
+        }
+
+        if (argv[i] == "-e") {
+            std::cout << argv[i];
+            dr::ArgErr();
+        }
     }
     return EXIT_SUCCESS;
 }
 
 void dr::ArgErr()
 {
-    SetConsoleTextAttribute(dr::hOut, 12);
+    SetConsoleTextAttribute(hOut, 12);
     std::clog << "Error! Incorrect syntax." << std::endl << std::endl;
-    SetConsoleTextAttribute(dr::hOut, 7);
-    dr::ShowHelp();
+    SetConsoleTextAttribute(hOut, 7);
+    ShowHelp();
     exit(EXIT_FAILURE);
 }
 
@@ -102,13 +114,12 @@ void dr::ShowHelp()
 }
 
 void dr::ListAllEvents() {
-    for (int i = 0; i < dr::Event::objCount; i++) {
+    for (int i = 0; i < Event::objCount; i++) {
         s[i]->ShowData(i + 1);
     }
 }
 
 unsigned short dr::CheckEventNr(int nr) {
-    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     if (nr > Event::objCount || nr == 0) {
         SetConsoleTextAttribute(hOut, 12);
         std::clog << "Error! No such event" << std::endl;
@@ -120,7 +131,6 @@ unsigned short dr::CheckEventNr(int nr) {
 }
 
 void dr::SaveAllEvents() {
-    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     rem.open(REMINDERS, std::ios::out | std::ios::trunc);
     if (!rem.good()){
         SetConsoleTextAttribute(hOut, 12);
@@ -129,7 +139,7 @@ void dr::SaveAllEvents() {
         exit(EXIT_FAILURE);
     }
     rem.close();
-    for (int i = 0; i < dr::Event::objCount; i++) {
+    for (int i = 0; i < Event::objCount; i++) {
         s[i]->Save();
     }
 }
@@ -140,7 +150,6 @@ void dr::DeleteEvent(unsigned short n) {
 }
 
 void dr::GetSavedEvents() {
-    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     std::string line;
     int numOfLines = 0;
     rem.open(REMINDERS, std::ios::in);
@@ -158,37 +167,59 @@ void dr::GetSavedEvents() {
     // std::cout << numOfLines;
 
     for (int i = 0; i < (numOfLines / 6); i++) {
-        s.push_back(new dr::Event);
+        s.push_back(new Event);
     }
 }
 
 void dr::CheckEvents()
 {
-    std::cout << "[" << dr::GetLocalDate() << "]" << std::endl << std::endl;
+    std::cout << "[" << GetLocalDate() << "]" << std::endl << std::endl;
     bool even = false;
-    for (int i = 0; i < dr::Event::objCount; i++)
+    for (int i = 0; i < Event::objCount; i++)
     {
         s[i]->Check(&even);
     }
 
-    if (!dr::Event::anyEvent)
+    if (!Event::anyEvent)
         std::cout << "No reminders scheduled for today";
 }
 
 std::string dr::GetLocalDate()
 {
     std::string date;
-    if (dr::ltm->tm_mday <= 9)
-        date = "0" + std::to_string(dr::ltm->tm_mday) + ".";
+    if (ltm->tm_mday <= 9)
+        date = "0" + std::to_string(ltm->tm_mday) + ".";
     else
-        date = std::to_string(dr::ltm->tm_mday) + ".";
+        date = std::to_string(ltm->tm_mday) + ".";
 
-    if (dr::ltm->tm_mon + 1 <= 9)
-        date += "0" + std::to_string(dr::ltm->tm_mon + 1);
+    if (ltm->tm_mon + 1 <= 9)
+        date += "0" + std::to_string(ltm->tm_mon + 1);
     else
-        date += std::to_string(dr::ltm->tm_mon + 1);
+        date += std::to_string(ltm->tm_mon + 1);
 
-    date += "." + std::to_string(dr::ltm->tm_year + 1900);
+    date += "." + std::to_string(ltm->tm_year + 1900);
 
     return date;
+}
+
+void dr::DeleteOutOfDate()
+{
+    std::vector < unsigned short > iter;
+    iter.reserve(10);
+
+    std::cout << "[ " << GetLocalDate() << " ]" << std::endl << std::endl;
+
+    for (int i = 0; i < Event::objCount; i++)
+    {
+        if (s[i]->CheckOutOfDate()) iter.push_back(i);
+    }
+    
+    for (int i = 0; i < iter.size(); i++)
+    {
+        DeleteEvent(iter[i] - i);
+    }
+
+    SetConsoleTextAttribute(hOut, 7);
+    std::cout << "Deleted: " << iter.size() << " reminders";
+    iter.clear();
 }

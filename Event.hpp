@@ -25,7 +25,7 @@ namespace date_rem
         ~Event();
 
         void CheckDateFormat(std::string);
-
+        bool CheckOutOfDate();
         void DefineDate();
         void ShowData(int);
         void Save();
@@ -47,6 +47,7 @@ namespace date_rem
     void GetSavedEvents();
     void SaveAllEvents();
     void ListAllEvents();
+    void DeleteOutOfDate();
     void DeleteEvent(unsigned short);
     unsigned short CheckEventNr(int);
     void ShowHelp();
