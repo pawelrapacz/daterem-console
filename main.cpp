@@ -12,9 +12,9 @@ std::vector < dr::Event* > s;
 
 int main(int argc, char *argv[])
 {
-    SetConsoleCP( 1250 );
-    SetConsoleOutputCP( 1250 );
-    setlocale( LC_ALL, "1250" );
+    SetConsoleCP( 65001 );
+    SetConsoleOutputCP( 65001 );
+    setlocale( LC_ALL, "65001" );
 
     for (int i = 1; i < argc; i++)
     {
@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
         {
             if (argc != 2) dr::ArgErr();
 
-            std::cout << "daterem 1.0";
+            std::cout << "daterem 1.0.0\nCopyright (C) 2022 Paweł Rapacz\nThis program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.\nThis is free software, and you are welcome to redistribute it\nunder certain conditions; type `show c' for details.";
             return EXIT_SUCCESS;
         }
 
@@ -103,7 +103,7 @@ void dr::ArgErr()
 void dr::ShowHelp()
 {
     std::string line;
-    std::ifstream help("help.txt");
+    std::ifstream help("../src/help.txt");
     if (!help.good()) {
         exit(EXIT_FAILURE);
     }

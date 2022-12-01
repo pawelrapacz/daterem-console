@@ -39,9 +39,7 @@ namespace date_rem
     static const tm *ltm = localtime(&now);
 
     static std::fstream rem;
-    const std::string REMINDERS = "reminders";
-    static std::ofstream bat;
-    const std::string BAT = "DateRem.bat";
+    const std::string REMINDERS = "../src/reminders";
 
     // OTHER FUNCTIONS
     void GetSavedEvents();
