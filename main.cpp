@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
             return EXIT_SUCCESS;
         }
 
-        if (argv[i] == "-e") {
+        if (!(argc == 6 && std::string(argv[i]) == "-e" && (std::string(argv[i + 1]) == "--new" || std::string(argv[i + 1]) == "-n"))) {
             std::cout << argv[i];
             dr::ArgErr();
         }
@@ -206,8 +206,6 @@ void dr::DeleteOutOfDate()
 {
     std::vector < unsigned short > iter;
     iter.reserve(10);
-
-    std::cout << "[ " << GetLocalDate() << " ]" << std::endl << std::endl;
 
     for (int i = 0; i < Event::objCount; i++)
     {
