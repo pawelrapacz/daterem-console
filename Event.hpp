@@ -63,7 +63,6 @@ namespace date_rem
         Event(std::string, std::string, std::string);
         ~Event();
 
-        void CheckDateFormat(std::string);
         bool CheckOutOfDate();
         void DefineDate();
         void ShowData(int);

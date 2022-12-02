@@ -64,24 +64,46 @@ dr::Event::Event()
 
 dr::Event::Event(std::string d, std::string t, std::string des)
 {
+    bool exitStat = false;
     std::string con;
-    con = d.substr(0,2);
-    day = std::stoi(con);
-    con = d.substr(3, 2);
-    month = std::stoi(con);
 
-    if (d.length() > 6)
+    if (!(d.length() == 5 || d.length() == 10)) exitStat = true; 
+    
+    if (!isdigit(d[0]) || !isdigit(d[1]) || !isdigit(d[3]) || !isdigit(d[4])) exitStat = true;
+    else
     {
-        con = d.substr(6,4);
-        year = std::stoi(con);
-        everyYearEvent = false;
+        con = d.substr(0,2);
+        day = std::stoi(con);
+        con = d.substr(3, 2);
+        month = std::stoi(con);
+        if (day > 31 || day < 1 || month > 12 || month < 1) exitStat = true;
     }
-    else {
+
+    if (d.length() == 5)
+    {
+        if (!(d[2] == '.')) exitStat = true;
         year = 0;
         everyYearEvent = true;
     }
+    else
+    {
+        if (d[2] != '.' || d[5] != '.') exitStat = true;
+        if (!isdigit(d[6]) || !isdigit(d[7]) || !isdigit(d[8]) || !isdigit(d[9])) exitStat = true;
+        else
+        {
+            everyYearEvent = false;
+            con = d.substr(6,4);
+            year = std::stoi(con);
+            // the year can't be less than current year and grater than current year + 100
+            if (year > ltm->tm_year + 2000 || year < ltm->tm_year + 1900) exitStat = true;
+        }
+    }
 
-    CheckDateFormat(d);
+    if (exitStat) {
+        SetConsoleTextAttribute(hOut, 12);
+        std::clog << "Error! Wrong date format." << endl;
+        exit(EXIT_FAILURE);
+    }
 
     title = t;
     description = des;
@@ -154,28 +176,6 @@ void dr::Event::ShowData(int i) {
     else {
         SetConsoleTextAttribute( hOut, 7);
         cout << i << " - " << fullDate << " - " << title << " - " << description << endl;
-    }
-}
-
-void dr::Event::CheckDateFormat(std::string d)
-{
-    bool exitStat = false;
-
-    if (!(d.length() == 5 || d.length() == 10)) exitStat = true;
-
-    if (!isdigit(d[0]) || !isdigit(d[1]) || !isdigit(d[3]) || !isdigit(d[4])) exitStat = true;
-
-    if (day > 31 || day < 1 || month > 12 || month < 1) exitStat = true;
-
-    if (!everyYearEvent) {
-        //if (year > 2100 || year < 2022) exitStat = true;
-        if (!isdigit(d[6]) || !isdigit(d[7]) || !isdigit(d[8]) || !isdigit(d[9])) exitStat = true;
-    }
-
-    if (exitStat) {
-        SetConsoleTextAttribute(hOut, 12);
-        std::clog << "Error! Wrong date format." << endl;
-        exit(EXIT_FAILURE);
     }
 }
 
