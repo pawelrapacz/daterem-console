@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
         else if (currArg == "-e" && argc == 3)
         {
             dr::GetSavedEvents();
-            s[dr::CheckEventNr(std::stoi(argv[i + 1]))]->SetToEveryYearEvent();
+            s[ dr::CheckEventNr(argv[i + 1]) ]->SetToEveryYearEvent();
             dr::SaveAllEvents();
             return EXIT_SUCCESS;
         }
@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
         else if (currArg == "-b" && argc == 3)
         {
             dr::GetSavedEvents();
-            s[dr::CheckEventNr(std::stoi(argv[i + 1]))]->SetToRemBefore();
+            s[ dr::CheckEventNr(argv[i + 1]) ]->SetToRemBefore();
             dr::SaveAllEvents();
             return EXIT_SUCCESS;
         }
@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
         else if (currArg == "--delete" && argc == 3)
         {
             dr::GetSavedEvents();
-            dr::DeleteEvent(dr::CheckEventNr(std::stoi(argv[i + 1])));
+            dr::DeleteEvent( dr::CheckEventNr(argv[i + 1]) );
             dr::SaveAllEvents();
             return EXIT_SUCCESS;
         }
@@ -161,14 +161,19 @@ void dr::ListAllEvents() {
     }
 }
 
-unsigned short dr::CheckEventNr(int nr)
+unsigned short dr::CheckEventNr(std::string num)
 {
-    if (nr > Event::objCount || nr == 0) {
+    for (int i = 0; i < num.length(); i++)
+        if (!isdigit(num[i])) dr::ArgErr();
+    
+    unsigned short n = stoi(num);
+
+    if (n > Event::objCount || n == 0) {
         SetConsoleTextAttribute(hOut, 12);
         std::clog << "Error! No such event" << std::endl;
         exit(EXIT_FAILURE);
     }
-    else return nr - 1;
+    else return n - 1;
 }
 
 void dr::SaveAllEvents()

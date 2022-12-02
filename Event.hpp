@@ -86,7 +86,7 @@ namespace date_rem
     void ListAllEvents();
     void DeleteOutOfDate();
     void DeleteEvent(unsigned short);
-    unsigned short CheckEventNr(int);
+    unsigned short CheckEventNr(std::string);
     void ShowHelp();
     void CheckEvents();
     std::string GetLocalDate();
