@@ -151,7 +151,7 @@ void dr::ArgErr()
 {
     SetConsoleTextAttribute(hOut, 12);
     std::clog << "Error! Incorrect syntax" << std::endl;
-    std::clog << "Try 'daterem --help' for more information.";
+    std::clog << "Try \'daterem --help\' for more information.";
     exit(EXIT_FAILURE);
 }
 
@@ -159,12 +159,11 @@ void dr::ShowHelp()
 {
     std::string line;
     std::ifstream help("../src/help.txt");
-    if (!help.good()) {
-        exit(EXIT_FAILURE);
-    }
-    while(getline(help, line)){
+    if (!help.good()) exit(EXIT_FAILURE);
+
+    while(getline(help, line))
         std::cout << line << std::endl;
-    }
+    
     help.close();
 }
 
@@ -174,18 +173,18 @@ void dr::ListAllEvents() {
     }
 }
 
-unsigned short dr::CheckEventNr(int nr) {
+unsigned short dr::CheckEventNr(int nr)
+{
     if (nr > Event::objCount || nr == 0) {
         SetConsoleTextAttribute(hOut, 12);
         std::clog << "Error! No such event" << std::endl;
         exit(EXIT_FAILURE);
     }
-    else {
-        return nr - 1;
-    }
+    else return nr - 1;
 }
 
-void dr::SaveAllEvents() {
+void dr::SaveAllEvents()
+{
     rem.open(REMINDERS, std::ios::out | std::ios::trunc);
     if (!rem.good()){
         SetConsoleTextAttribute(hOut, 12);
@@ -194,9 +193,9 @@ void dr::SaveAllEvents() {
         exit(EXIT_FAILURE);
     }
     rem.close();
-    for (int i = 0; i < Event::objCount; i++) {
+
+    for (int i = 0; i < Event::objCount; i++)
         s[i]->Save();
-    }
 }
 
 void dr::DeleteEvent(unsigned short n) {
@@ -204,26 +203,28 @@ void dr::DeleteEvent(unsigned short n) {
     s.erase(s.begin() + n);
 }
 
-void dr::GetSavedEvents() {
+void dr::GetSavedEvents()
+{
     std::string line;
     int numOfLines = 0;
     rem.open(REMINDERS, std::ios::in);
-    if (!rem.good()){
+    if (!rem.good())
+    {
         SetConsoleTextAttribute(hOut, 12);
         std::clog << "Error! Cannot open the save file, check permission settings in the instalation directory." << std::endl;
         std::clog << "Also after the instalation there are no reminders, create one.";
         SetConsoleTextAttribute(hOut, 7);
         exit(EXIT_FAILURE);
     }
-    while (getline(rem, line)) {
+
+    while (getline(rem, line))
         if (!line.empty()) numOfLines++;
-    }
+    
     rem.close();
     // std::cout << numOfLines;
 
-    for (int i = 0; i < (numOfLines / 7); i++) {
+    for (int i = 0; i < (numOfLines / 7); i++)
         s.push_back(new Event);
-    }
 }
 
 void dr::CheckEvents()
@@ -231,9 +232,8 @@ void dr::CheckEvents()
     std::cout << "[" << GetLocalDate() << "]" << std::endl << std::endl;
     bool even = false;
     for (int i = 0; i < Event::objCount; i++)
-    {
         s[i]->Check(&even);
-    }
+
 
     if (!Event::anyEvent)
         std::cout << "No reminders scheduled for today";
@@ -263,14 +263,11 @@ void dr::DeleteOutOfDate()
     iter.reserve(10);
 
     for (int i = 0; i < Event::objCount; i++)
-    {
         if (s[i]->CheckOutOfDate()) iter.push_back(i);
-    }
     
     for (int i = 0; i < iter.size(); i++)
-    {
         DeleteEvent(iter[i] - i);
-    }
+
 
     SetConsoleTextAttribute(hOut, 7);
     std::cout << "Deleted: " << iter.size() << " reminders";

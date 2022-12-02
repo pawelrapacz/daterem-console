@@ -169,14 +169,9 @@ void dr::Event::Check(bool e)
 }
 
 void dr::Event::ShowData(int i) {
-    if (i % 2 == 0) {
-        SetConsoleTextAttribute( hOut, 6);
-        cout << i << " - " << fullDate << " - " << title << " - " << description << endl;
-    }
-    else {
-        SetConsoleTextAttribute( hOut, 7);
-        cout << i << " - " << fullDate << " - " << title << " - " << description << endl;
-    }
+    if (i % 2 == 0) SetConsoleTextAttribute( hOut, 6);
+    else SetConsoleTextAttribute( hOut, 7);
+    cout << i << " - " << fullDate << " - " << title << " - " << description << endl;
 }
 
 void dr::Event::SetToEveryYearEvent(){
@@ -194,13 +189,11 @@ bool dr::Event::CheckOutOfDate()
     if (!everyYearEvent)
     {
         if (year < ltm->tm_year + 1900) outDated = true;
-        if (month < ltm->tm_mon + 1 && year == ltm->tm_year + 1900) outDated = true;
-        if (day < ltm->tm_mday && month == ltm->tm_mon + 1 && year == ltm->tm_year + 1900) outDated = true;
+        else if (month < ltm->tm_mon + 1 && year == ltm->tm_year + 1900) outDated = true;
+        else if (day < ltm->tm_mday && month == ltm->tm_mon + 1 && year == ltm->tm_year + 1900) outDated = true;
     }
     if (outDated)
-    {
         cout << fullDate << " - " << title << " - " << description << endl;
-    }
 
     return outDated;
 }
