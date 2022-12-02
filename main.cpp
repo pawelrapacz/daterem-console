@@ -46,35 +46,27 @@ int main(int argc, char *argv[])
     for (int i = 1; i < argc; i++)
     {
         std::string currArg = argv[i];
-        if (currArg == "--help" || currArg == "-h")
+        if ((currArg == "--help" || currArg == "-h") && argc == 2)
         {
-            if (argc != 2) dr::ArgErr();
-
             dr::ShowHelp();
             return EXIT_SUCCESS;
         }
 
-        else if (currArg == "--version" || currArg == "-v")
+        else if ((currArg == "--version" || currArg == "-v") && argc == 2)
         {
-            if (argc != 2) dr::ArgErr();
-
             std::cout << "daterem 1.0.0\nCopyright (C) 2022 Paweł Rapacz\nThis program comes with ABSOLUTELY NO WARRANTY;\nThis is free software, and you are welcome to redistribute it\nunder certain conditions.";
             return EXIT_SUCCESS;
         }
 
-        else if (currArg == "--list" || currArg == "-l")
+        else if ((currArg == "--list" || currArg == "-l") && argc == 2)
         {
-            if (argc != 2) dr::ArgErr();
-
             dr::GetSavedEvents();
             dr::ListAllEvents();
             return EXIT_SUCCESS;
         }
 
-        else if (currArg == "--check" || currArg == "-c")
+        else if ((currArg == "--check" || currArg == "-c") && argc == 2)
         {
-            if (argc != 2) dr::ArgErr();
-
             dr::GetSavedEvents();
             dr::CheckEvents();
             return EXIT_SUCCESS;
@@ -96,10 +88,8 @@ int main(int argc, char *argv[])
             return EXIT_SUCCESS;
         }
 
-        else if (currArg == "--new" || currArg == "-n")
+        else if ((currArg == "--new" || currArg == "-n") && (argc >= 5 || argc <= 7))
         {
-            if (argc < 5 || argc > 7) dr::ArgErr();
-
             s.push_back(new dr::Event(std::string(argv[i + 1]), argv[i + 2], argv[i + 3]));
 
             if (argc > 5)
@@ -116,20 +106,16 @@ int main(int argc, char *argv[])
             return EXIT_SUCCESS;
         }
 
-        else if (currArg == "--delete")
+        else if (currArg == "--delete" && argc == 3)
         {
-            if (argc != 3) dr::ArgErr();
-
             dr::GetSavedEvents();
             dr::DeleteEvent(dr::CheckEventNr(std::stoi(argv[i + 1])));
             dr::SaveAllEvents();
             return EXIT_SUCCESS;
         }
 
-        else if (currArg == "--delete-outdated" || currArg == "-o")
+        else if ((currArg == "--delete-outdated" || currArg == "-o") && argc == 2)
         {
-            if (argc != 2) dr::ArgErr();
-
             dr::GetSavedEvents();
             dr::DeleteOutOfDate();
             dr::SaveAllEvents();
