@@ -29,14 +29,33 @@ namespace date_rem
     class Event
     {
     private:
+        /**
+         * day, month, year - reminder date;
+         * 
+         * fRem[3] - first reminder date [0]day [1]month [2]year;
+         * 
+         * sRem[3] - second reminder date;
+         * 
+         * fullDate - represents date in DD.MM.YYYY or DD.MM format
+         * 
+         * everyYearEvent - if true the reminder is set for every year with no year specified,
+         * else the reminder is single event with year precised (SetToEveryYearEvent() method changes the value
+         * to true even if the year is specified -> [-e] option) [defaulut: based on the date];
+         * 
+         * remBefore - if true the reminder is displayed two times before specified date,
+         * else the reminder displays only in the specified date [defaulut: false]
+         * (SetToRemBefore() sets the value to true);
+        */
         unsigned short day;
         unsigned short month;
         unsigned short year;
+        unsigned short fRem[3];
+        unsigned short sRem[3];
         std::string title;
-        std::string description, remDescription;
+        std::string description;
         std::string fullDate;
-        std::string firstRemDate, secRemDate;
         bool everyYearEvent;
+        bool remBefore;
     public:
         static bool anyEvent;
         static unsigned short objCount;
@@ -51,6 +70,7 @@ namespace date_rem
         void Save();
         void Check(bool);
         void SetToEveryYearEvent();
+        void SetToRemBefore();
     };
 
     static HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);

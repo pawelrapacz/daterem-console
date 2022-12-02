@@ -36,9 +36,17 @@ int main(int argc, char *argv[])
     SetConsoleOutputCP( 65001 );
     setlocale( LC_ALL, "65001" );
 
+    if (argc == 1)
+    {
+        dr::GetSavedEvents();
+        dr::CheckEvents();
+        return EXIT_SUCCESS;
+    }
+
     for (int i = 1; i < argc; i++)
     {
-        if (std::string(argv[i]) == "--help" || std::string(argv[i]) == "-h")
+        std::string currArg = argv[i];
+        if (currArg == "--help" || currArg == "-h")
         {
             if (argc != 2) dr::ArgErr();
 
@@ -46,7 +54,7 @@ int main(int argc, char *argv[])
             return EXIT_SUCCESS;
         }
 
-        else if (std::string(argv[i]) == "--version" || std::string(argv[i]) == "-v")
+        else if (currArg == "--version" || currArg == "-v")
         {
             if (argc != 2) dr::ArgErr();
 
@@ -54,7 +62,7 @@ int main(int argc, char *argv[])
             return EXIT_SUCCESS;
         }
 
-        else if (std::string(argv[i]) == "--list" || std::string(argv[i]) == "-l")
+        else if (currArg == "--list" || currArg == "-l")
         {
             if (argc != 2) dr::ArgErr();
 
@@ -63,7 +71,7 @@ int main(int argc, char *argv[])
             return EXIT_SUCCESS;
         }
 
-        else if (std::string(argv[i]) == "--check" || std::string(argv[i]) == "-c")
+        else if (currArg == "--check" || currArg == "-c")
         {
             if (argc != 2) dr::ArgErr();
 
@@ -72,19 +80,43 @@ int main(int argc, char *argv[])
             return EXIT_SUCCESS;
         }
 
-        else if (std::string(argv[i]) == "--new" || std::string(argv[i]) == "-n")
+        else if (currArg == "--new" || currArg == "-n")
         {
-            if (argc < 5 || argc > 6) dr::ArgErr();
+            if (argc < 5 || argc > 7) dr::ArgErr();
 
             s.push_back(new dr::Event(std::string(argv[i + 1]), argv[i + 2], argv[i + 3]));
 
-            if (argc == 6 && (std::string(argv[i - 1]) == "-e" || std::string(argv[i + 4]) == "-e")) s.back()->SetToEveryYearEvent();
+            /**
+             * TODO: -e -b proper handling
+             * ERROR: -e -b don't work at all
+            */
+
+            // if (argc > 5)
+            // {
+            //     if (
+            //     std::string(argv[i - 1]) == "-e" ||
+            //     std::string(argv[i - 2]) == "-e" ||
+            //     std::string(argv[i + 4]) == "-e" ||
+            //     std::string(argv[i + 5]) == "-e"
+            //     ) 
+            //         s.back()->SetToEveryYearEvent();
+
+            //     if (
+            //     std::string(argv[i - 1]) == "-b" ||
+            //     std::string(argv[i - 2]) == "-b" ||
+            //     std::string(argv[i + 4]) == "-b" ||
+            //     std::string(argv[i + 5]) == "-b"
+            //     ) 
+            //         s.back()->SetToRemBefore();
+                
+            //     dr::ArgErr();
+            // }
 
             s.back()->Save();
             return EXIT_SUCCESS;
         }
 
-        else if (std::string(argv[i]) == "--delete")
+        else if (currArg == "--delete")
         {
             if (argc != 3) dr::ArgErr();
 
@@ -94,29 +126,32 @@ int main(int argc, char *argv[])
             return EXIT_SUCCESS;
         }
 
-        else if (std::string(argv[i]) == "--delete-outdated" || std::string(argv[i]) == "-o")
+        else if (currArg == "--delete-outdated" || currArg == "-o")
         {
             if (argc != 2) dr::ArgErr();
+
             dr::GetSavedEvents();
             dr::DeleteOutOfDate();
             dr::SaveAllEvents();
             return EXIT_SUCCESS;
         }
 
-        if (!(argc == 6 && std::string(argv[i]) == "-e" && (std::string(argv[i + 1]) == "--new" || std::string(argv[i + 1]) == "-n"))) {
-            std::cout << argv[i];
-            dr::ArgErr();
-        }
+        if (!( 
+        argc <= 6 && 
+        (currArg == "-e" || currArg == "-b") &&
+        (
+            ( std::string(argv[i + 1]) == "--new" || std::string(argv[i + 1]) == "-n") ||
+            ( std::string(argv[i + 2]) == "--new" || std::string(argv[i + 2]) == "-n")
+        )
+        )) dr::ArgErr();
     }
-    return EXIT_SUCCESS;
 }
 
 void dr::ArgErr()
 {
     SetConsoleTextAttribute(hOut, 12);
-    std::clog << "Error! Incorrect syntax." << std::endl << std::endl;
-    SetConsoleTextAttribute(hOut, 7);
-    ShowHelp();
+    std::clog << "Error! Incorrect syntax" << std::endl;
+    std::clog << "Try 'daterem --help' for more information.";
     exit(EXIT_FAILURE);
 }
 
@@ -186,7 +221,7 @@ void dr::GetSavedEvents() {
     rem.close();
     // std::cout << numOfLines;
 
-    for (int i = 0; i < (numOfLines / 6); i++) {
+    for (int i = 0; i < (numOfLines / 7); i++) {
         s.push_back(new Event);
     }
 }

@@ -44,7 +44,7 @@ dr::Event::Event()
         SetConsoleTextAttribute(hOut, 7);
         exit(EXIT_FAILURE);
     }
-    short lineNum = objCount * 6 + 1;
+    short lineNum = objCount * 7 + 1; // information on wich line the object data starts (every object takes 7 lines)
     short actualLine = 1;
     std::string line;
     while(getline(rem, line)) {
@@ -53,10 +53,8 @@ dr::Event::Event()
         else if (actualLine == lineNum + 2) year = stoi(line);
         else if (actualLine == lineNum + 3) title = line;
         else if (actualLine == lineNum + 4) description = line;
-        else if (actualLine == lineNum + 5){
-            everyYearEvent = stoi(line);
-            break;
-        }
+        else if (actualLine == lineNum + 5) everyYearEvent = stoi(line);
+        else if (actualLine == lineNum + 6) remBefore = stoi(line);
         actualLine++;
     }
     rem.close();
@@ -87,13 +85,14 @@ dr::Event::Event(std::string d, std::string t, std::string des)
 
     title = t;
     description = des;
+    remBefore = false;
     DefineDate();
     objCount++;
 }
 
 dr::Event::~Event()
 {
-    cout << "\nUsuni�to obiekt";
+    // cout << "\nObject has been deleted";
     objCount--;
 }
 
@@ -103,36 +102,47 @@ dr::Event::~Event()
 void dr::Event::Check(bool e)
 {
     bool today = false;
+    bool before = false;
     if (everyYearEvent)
     {
         if (day == ltm->tm_mday && month == ltm->tm_mon + 1)
-        {
             today = true;
-            anyEvent = true;
-        }
     }
     else
     {
         if (day == ltm->tm_mday && month == ltm->tm_mon + 1 && year == ltm->tm_year + 1900)
-        {
             today = true;
-            anyEvent = true;
-        }
     }
 
-    if (today)
+    if (remBefore)
     {
-        if (e)
-        { 
-            SetConsoleTextAttribute( hOut, 6);
-            e = false;
+        if (everyYearEvent)
+        {
+            if (fRem[0] == ltm->tm_mday && fRem[1] == ltm->tm_mon + 1)
+                before = true;
+            else if (sRem[0] == ltm->tm_mday && sRem[1] == ltm->tm_mon + 1)
+                before = true;
         }
         else
         {
-            SetConsoleTextAttribute( hOut, 7);
-            e = true;
+            if (fRem[0] == ltm->tm_mday && fRem[1] == ltm->tm_mon + 1 && fRem[2] == ltm->tm_year + 1900)
+                before = true;
+            else if (sRem[0] == ltm->tm_mday && sRem[1] == ltm->tm_mon + 1 && sRem[2] == ltm->tm_year + 1900)
+                before = true;
         }
+    }
+
+
+    if (today)
+    {
+        anyEvent = true;
         cout << title << " " << description << endl;
+    }
+
+    if (before)
+    {
+        anyEvent = true;
+        cout << "In day " + fullDate + " " + title + " - " + description + " is scheduled" << endl;
     }
 }
 
@@ -173,6 +183,10 @@ void dr::Event::SetToEveryYearEvent(){
     everyYearEvent = true;
 }
 
+void dr::Event::SetToRemBefore() {
+    remBefore = true;
+}
+
 bool dr::Event::CheckOutOfDate()
 {
     bool outDated = false;
@@ -193,41 +207,25 @@ bool dr::Event::CheckOutOfDate()
 
 void dr::Event::DefineDate() {
     // defining fullDate
-    if (day <= 9)
-        fullDate = "0" + std::to_string(day) + ".";
-    else
-        fullDate = std::to_string(day) + ".";
+    if (day <= 9) fullDate = "0" + std::to_string(day) + ".";
+    else fullDate = std::to_string(day) + ".";
+
+    if (month <= 9) fullDate += "0" + std::to_string(month);
+    else fullDate += std::to_string(month);
+
+    if (!everyYearEvent) fullDate += "." + std::to_string(year);
 
 
-    if (month <= 9)
-        fullDate += "0" + std::to_string(month);
-    else
-        fullDate += std::to_string(month);
-
-
-    if (!everyYearEvent)
-        fullDate += "." + std::to_string(year);
 
     // defining firstRemDate and second one
     const unsigned short remDaysF = 7, remDaysS = 2; // days to back reminders the date
-
     // defining remDaysS
+    // day
 
     if (day > remDaysS) {
-        if (day <= 9)
-        secRemDate = "0" + std::to_string(day - remDaysS) + ".";
-        else
-            secRemDate = std::to_string(day - remDaysS) + ".";
-
-
-        if (month <= 9)
-            secRemDate += "0" + std::to_string(month);
-        else
-            secRemDate += std::to_string(month);
-
-
-        if (!everyYearEvent)
-            secRemDate += "." + std::to_string(year);
+        sRem[0] = day - remDaysS;
+        sRem[1] = month;
+        if (!everyYearEvent) sRem[2] = year;
     }
     else {
         switch (month) {
@@ -238,54 +236,45 @@ void dr::Event::DefineDate() {
             case 8:
             case 9:
             case 11:
-                secRemDate = std::to_string(31 - abs(day - remDaysS)) + ".";
+                sRem[0] = 31 - abs(day - remDaysS);
                 break;
             case 5:
             case 7:
             case 10:
             case 12:
-                secRemDate = std::to_string(30 - abs(day - remDaysS)) + ".";
+                sRem[0] = 30 - abs(day - remDaysS);
                 break;
             case 3:
                 if (!everyYearEvent) {
                     if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0)
-                        secRemDate = std::to_string(29 - abs(day - remDaysS)) + ".";
+                        sRem[0] = 29 - abs(day - remDaysS);
                     else
-                        secRemDate = std::to_string(28 - abs(day - remDaysS)) + ".";
+                        sRem[0] = 28 - abs(day - remDaysS);
                 }
                 break;
         }
-        if (month == 1)
-            secRemDate += "12";
+
+        // month and year
+        
+        if (month == 1) {
+            sRem[1] = 12;
             if (!everyYearEvent)
-                secRemDate += "." + std::to_string(year - 1);
+                sRem[2] = year - 1;
+        }
         else {
-            if (month - 1 <= 9)
-            secRemDate += "0" + std::to_string(month - 1);
-            else
-            secRemDate += std::to_string(month - 1);
+            sRem[1] = month - 1;
             if (!everyYearEvent)
-                secRemDate += "." + std::to_string(year);
+                sRem[2] = year;
         }
     }
 
     // defining remDaysF
+    // day
 
     if (day > remDaysF) {
-        if (day <= 9)
-        firstRemDate = "0" + std::to_string(day - remDaysF) + ".";
-        else
-            firstRemDate = std::to_string(day - remDaysF) + ".";
-
-
-        if (month <= 9)
-            firstRemDate += "0" + std::to_string(month);
-        else
-            firstRemDate += std::to_string(month);
-
-
-        if (!everyYearEvent)
-            firstRemDate += "." + std::to_string(year);
+        fRem[0] = day - remDaysF;
+        fRem[1] = month;
+        if (!everyYearEvent) fRem[2] = year;
     }
     else {
         switch (month) {
@@ -296,40 +285,37 @@ void dr::Event::DefineDate() {
             case 8:
             case 9:
             case 11:
-                firstRemDate = std::to_string(31 - abs(day - remDaysF)) + ".";
+                fRem[0] = 31 - abs(day - remDaysF);
                 break;
             case 5:
             case 7:
             case 10:
             case 12:
-                firstRemDate = std::to_string(30 - abs(day - remDaysF)) + ".";
+                fRem[0] = 30 - abs(day - remDaysF);
                 break;
             case 3:
                 if (!everyYearEvent) {
                     if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0)
-                        firstRemDate = std::to_string(29 - abs(day - remDaysF)) + ".";
+                        fRem[0] = 29 - abs(day - remDaysF);
                     else
-                        firstRemDate = std::to_string(28 - abs(day - remDaysF)) + ".";
+                        fRem[0] = 28 - abs(day - remDaysF);
                 }
                 break;
         }
-        if (month == 1)
-            firstRemDate += "12";
+
+        // month and year
+
+        if (month == 1) {
+            fRem[1] = 12;
             if (!everyYearEvent)
-                firstRemDate += "." + std::to_string(year - 1);
+                fRem[2] = year - 1;
+        }
         else {
-            if (month - 1 <= 9)
-            firstRemDate += "0" + std::to_string(month - 1);
-            else
-            firstRemDate += std::to_string(month - 1);
+            fRem[1] = month - 1;
             if (!everyYearEvent)
-                firstRemDate += "." + std::to_string(year);
+                fRem[2] = year;
         }
     }
-
-
-    // defining remDescription
-    remDescription = "In day" + fullDate + " zaplanowane jest: " + description;
 }
 
 void dr::Event::Save() {
@@ -345,6 +331,7 @@ void dr::Event::Save() {
     rem << endl << year;
     rem << endl << title;
     rem << endl << description;
-    rem << endl << everyYearEvent << endl;
+    rem << endl << everyYearEvent;
+    rem << endl << remBefore << endl;
     rem.close();
 }
