@@ -80,16 +80,27 @@ int main(int argc, char *argv[])
             return EXIT_SUCCESS;
         }
 
+        else if (currArg == "-e" && argc == 3)
+        {
+            dr::GetSavedEvents();
+            s[dr::CheckEventNr(std::stoi(argv[i + 1]))]->SetToEveryYearEvent();
+            dr::SaveAllEvents();
+            return EXIT_SUCCESS;
+        }
+
+        else if (currArg == "-b" && argc == 3)
+        {
+            dr::GetSavedEvents();
+            s[dr::CheckEventNr(std::stoi(argv[i + 1]))]->SetToRemBefore();
+            dr::SaveAllEvents();
+            return EXIT_SUCCESS;
+        }
+
         else if (currArg == "--new" || currArg == "-n")
         {
             if (argc < 5 || argc > 7) dr::ArgErr();
 
             s.push_back(new dr::Event(std::string(argv[i + 1]), argv[i + 2], argv[i + 3]));
-
-            /**
-             * TODO: -e -b proper handling
-             * ERROR: -e -b don't work at all
-            */
 
             if (argc > 5)
             {
