@@ -175,6 +175,7 @@ void dr::Event::ShowData(int i) {
 }
 
 void dr::Event::SetToEveryYearEvent(){
+    year = 0;
     everyYearEvent = true;
 }
 

@@ -91,26 +91,15 @@ int main(int argc, char *argv[])
              * ERROR: -e -b don't work at all
             */
 
-            // if (argc > 5)
-            // {
-            //     if (
-            //     std::string(argv[i - 1]) == "-e" ||
-            //     std::string(argv[i - 2]) == "-e" ||
-            //     std::string(argv[i + 4]) == "-e" ||
-            //     std::string(argv[i + 5]) == "-e"
-            //     ) 
-            //         s.back()->SetToEveryYearEvent();
-
-            //     if (
-            //     std::string(argv[i - 1]) == "-b" ||
-            //     std::string(argv[i - 2]) == "-b" ||
-            //     std::string(argv[i + 4]) == "-b" ||
-            //     std::string(argv[i + 5]) == "-b"
-            //     ) 
-            //         s.back()->SetToRemBefore();
-                
-            //     dr::ArgErr();
-            // }
+            if (argc > 5)
+            {
+                for (int j = 1; j < argc; j++)
+                {
+                    if (std::string(argv[j]) == "-e") s.back()->SetToEveryYearEvent();
+                    else if (std::string(argv[j]) == "-b") s.back()->SetToRemBefore();
+                    else if (!(argv[j] == argv[i] || argv[j] == argv[i + 1] || argv[j] == argv[i + 2] || argv[j] == argv[i + 3])) dr::ArgErr();
+                }
+            }
 
             s.back()->Save();
             return EXIT_SUCCESS;
@@ -136,14 +125,16 @@ int main(int argc, char *argv[])
             return EXIT_SUCCESS;
         }
 
-        if (!( 
-        argc <= 6 && 
+        else if (!( 
+        argc > 5 && 
         (currArg == "-e" || currArg == "-b") &&
         (
-            ( std::string(argv[i + 1]) == "--new" || std::string(argv[i + 1]) == "-n") ||
-            ( std::string(argv[i + 2]) == "--new" || std::string(argv[i + 2]) == "-n")
-        )
-        )) dr::ArgErr();
+            std::string(argv[i + 1]) == "--new" ||
+            std::string(argv[i + 2]) == "--new" ||
+            std::string(argv[i + 1]) == "-n" ||
+            std::string(argv[i + 2]) == "-n"
+        ))) 
+            dr::ArgErr();
     }
 }
 
