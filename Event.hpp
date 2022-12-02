@@ -42,7 +42,7 @@ namespace date_rem
          * else the reminder is single event with year precised (SetToEveryYearEvent() method changes the value
          * to true even if the year is specified -> [-e] option) [defaulut: based on the date];
          * 
-         * remBefore - if true the reminder is displayed two times before specified date,
+         * remBefore - if true the reminder is additionally displayed two times before specified date,
          * else the reminder displays only in the specified date [defaulut: false]
          * (SetToRemBefore() sets the value to true);
         */

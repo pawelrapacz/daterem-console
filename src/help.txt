@@ -24,7 +24,12 @@ DESCRIPTION
         -e [number]
             Converts reminder with indicated number to be every year (use --list to see the numeration).
 
-            Used with -n or --new e.g. (-e --new ...) forces created reminder to be every year, if used like this don't set number property.
+            Used with -n or --new e.g. (-e --new ...) forces created reminder to be every year, if used like this do not set the number.
+
+        -b [number]
+            Sets two additional reminders 7 days and 2 days before specified date (use --list to see the numeration).
+
+            When used with -n or --new, e.g. (-b --new ...) do not set the number.
 
         --delete [number]
             Deletes reminder with indicated number (use --list to see the numeration).
