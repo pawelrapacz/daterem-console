@@ -39,8 +39,7 @@ dr::Event::Event()
     rem.open(REMINDERS, std::ios::in);
     if (!rem.good()){
         SetConsoleTextAttribute(hOut, 12);
-        std::clog << "Error! Cannot open the save file, check permission settings in the instalation directory." << std::endl;
-        std::clog << "Also after the instalation there are no reminders, create one.";
+        std::clog << "Error! Cannot open the data file, create a new reminder first." << endl;
         SetConsoleTextAttribute(hOut, 7);
         exit(EXIT_FAILURE);
     }
@@ -213,6 +212,9 @@ void dr::Event::DefineDate() {
 
     // defining firstRemDate and second one
     const unsigned short remDaysF = 7, remDaysS = 2; // days to back reminders the date
+    unsigned short y; // stands for year (for determining dates in leap years)
+    everyYearEvent ? y = ltm->tm_year + 1900 : y = year;
+
     // defining remDaysS
     // day
 
@@ -239,12 +241,10 @@ void dr::Event::DefineDate() {
                 sRem[0] = 30 - abs(day - remDaysS);
                 break;
             case 3:
-                if (!everyYearEvent) {
-                    if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0)
-                        sRem[0] = 29 - abs(day - remDaysS);
-                    else
-                        sRem[0] = 28 - abs(day - remDaysS);
-                }
+                if ((y % 4 == 0 && y % 100 != 0) || y % 400 == 0)
+                    sRem[0] = 29 - abs(day - remDaysS);
+                else
+                    sRem[0] = 28 - abs(day - remDaysS);
                 break;
         }
 
@@ -288,12 +288,10 @@ void dr::Event::DefineDate() {
                 fRem[0] = 30 - abs(day - remDaysF);
                 break;
             case 3:
-                if (!everyYearEvent) {
-                    if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0)
+                    if ((y % 4 == 0 && y % 100 != 0) || y % 400 == 0)
                         fRem[0] = 29 - abs(day - remDaysF);
                     else
                         fRem[0] = 28 - abs(day - remDaysF);
-                }
                 break;
         }
 
