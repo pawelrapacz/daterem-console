@@ -35,7 +35,7 @@ I undertook this project mainly to inprove my coding skills, learn something new
 
 
 ## Setup
-
+You can install daterem by downloading the package and adding it to your [Path](https://gist.github.com/nex3/c395b2f8fd4b02068be37c961301caa7).
 
 
 ## Usage
@@ -110,7 +110,7 @@ Project is still in progress, I am adding new features frequently, if you have a
 ## Upcoming changes
 
 ### Things that need improvement:
-- Determining dates in leap years
+
 
 ### Upcoming features:
 - Weekly reminders
@@ -120,7 +120,7 @@ Project is still in progress, I am adding new features frequently, if you have a
 
 
 ## Contact
-Created by [pawelrapacz](https://github.com/pawelrapacz/) - feel free to contact me!
+Created by [@pawelrapacz](https://github.com/pawelrapacz/) - feel free to contact me!
 
 
 
