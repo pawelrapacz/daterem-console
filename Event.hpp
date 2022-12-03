@@ -23,6 +23,7 @@
 #include <windows.h>
 #include <string>
 #include <fstream>
+#include <filesystem>
 
 namespace date_rem
 {
@@ -72,13 +73,14 @@ namespace date_rem
         void SetToRemBefore();
     };
 
-    static HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    const HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 
     static const time_t now = time(0);
     static const tm *ltm = localtime(&now);
 
+    // FILES
+    const std::filesystem::path REMINDERS(std::string(getenv("APPDATA")).append("\\daterem\\reminders"));
     static std::fstream rem;
-    const std::string REMINDERS = "../src/reminders";
 
     // OTHER FUNCTIONS
     void GetSavedEvents();
@@ -91,4 +93,5 @@ namespace date_rem
     void CheckEvents();
     std::string GetLocalDate();
     void ArgErr();
+    void AppDataCheckMeta(); // Checks whether users data exists, if not creates it
 }

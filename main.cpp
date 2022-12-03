@@ -24,8 +24,10 @@
 #include <string>
 #include <fstream>
 #include <ctime>
+#include <filesystem>
 #include "Event.hpp"
 
+namespace fs = std::filesystem;
 namespace dr = date_rem;
 
 std::vector < dr::Event* > s;
@@ -103,6 +105,7 @@ int main(int argc, char *argv[])
             }
 
             s.back()->Save();
+            std::cout << "Successfully created new reimnder.";
             return EXIT_SUCCESS;
         }
 
@@ -146,7 +149,7 @@ void dr::ArgErr()
 void dr::ShowHelp()
 {
     std::string line;
-    std::ifstream help("../src/help.txt");
+    std::ifstream help("help.txt");
     if (!help.good()) exit(EXIT_FAILURE);
 
     while(getline(help, line))
@@ -178,10 +181,11 @@ unsigned short dr::CheckEventNr(std::string num)
 
 void dr::SaveAllEvents()
 {
+    AppDataCheckMeta();
     rem.open(REMINDERS, std::ios::out | std::ios::trunc);
     if (!rem.good()){
         SetConsoleTextAttribute(hOut, 12);
-        std::clog << "Error! Cannot open the save file, check permission settings in the instalation directory.";
+        std::clog << "Error! Data file not found.";
         SetConsoleTextAttribute(hOut, 7);
         exit(EXIT_FAILURE);
     }
@@ -204,8 +208,7 @@ void dr::GetSavedEvents()
     if (!rem.good())
     {
         SetConsoleTextAttribute(hOut, 12);
-        std::clog << "Error! Cannot open the save file, check permission settings in the instalation directory." << std::endl;
-        std::clog << "Also after the instalation there are no reminders, create one.";
+        std::clog << "Error! Cannot open the data file, create a new reminder first." << std::endl;
         SetConsoleTextAttribute(hOut, 7);
         exit(EXIT_FAILURE);
     }
@@ -265,4 +268,14 @@ void dr::DeleteOutOfDate()
     SetConsoleTextAttribute(hOut, 7);
     std::cout << "Deleted: " << iter.size() << " reminders";
     iter.clear();
+}
+
+void dr::AppDataCheckMeta()
+{
+    if (!fs::is_directory(REMINDERS.parent_path()) || !fs::is_regular_file(REMINDERS))
+    {
+        fs::remove_all(REMINDERS.parent_path());
+        fs::create_directory(REMINDERS.parent_path());
+        std::ofstream(REMINDERS).write(0, 0);
+    }
 }

@@ -315,17 +315,19 @@ void dr::Event::DefineDate() {
 void dr::Event::Save() {
     rem.open(REMINDERS, std::ios::out | std::ios::app);
     if (!rem.good()){
-        SetConsoleTextAttribute(hOut, 12);
-        std::clog << "Error! Cannot open the save file, check permission settings in the instalation directory.";
-        SetConsoleTextAttribute(hOut, 7);
-        exit(EXIT_FAILURE);
+        rem.close();
+        AppDataCheckMeta();
+        Save();
     }
-    rem << day;
-    rem << endl << month;
-    rem << endl << year;
-    rem << endl << title;
-    rem << endl << description;
-    rem << endl << everyYearEvent;
-    rem << endl << remBefore << endl;
-    rem.close();
+    else
+    {
+        rem << day;
+        rem << endl << month;
+        rem << endl << year;
+        rem << endl << title;
+        rem << endl << description;
+        rem << endl << everyYearEvent;
+        rem << endl << remBefore << endl;
+        rem.close();
+    }
 }
