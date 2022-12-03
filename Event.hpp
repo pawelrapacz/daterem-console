@@ -68,7 +68,7 @@ namespace date_rem
         void DefineDate();
         void ShowData(int);
         void Save();
-        void Check(bool);
+        void Check();
         void SetToEveryYearEvent();
         void SetToRemBefore();
     };

@@ -226,9 +226,8 @@ void dr::GetSavedEvents()
 void dr::CheckEvents()
 {
     std::cout << "[" << GetLocalDate() << "]" << std::endl << std::endl;
-    bool even = false;
     for (int i = 0; i < Event::objCount; i++)
-        s[i]->Check(&even);
+        s[i]->Check();
 
 
     if (!Event::anyEvent)

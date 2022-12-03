@@ -121,7 +121,7 @@ dr::Event::~Event()
 
 // METHODS
 
-void dr::Event::Check(bool e)
+void dr::Event::Check()
 {
     bool today = false;
     bool before = false;
