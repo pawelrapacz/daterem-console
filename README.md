@@ -98,7 +98,7 @@ Some day you might want to change one time reminder to annual one, then you can 
 <pre><code>daterem -e 1</code></pre>
 This option can also be used with `--new`, when used this way forces the reminder to be annual:
 <pre><code>daterem -e --new 01.01.2022 "some awesome title" "some awesome description"</code></pre>
-Despite specified year the reminder is annual. You can see it after using `--list` option.
+Despite the year specified created reminder is annual. You can see it after using `--list` option.
 <pre>
 C:> daterem --list
 1 - 01.01 - some awesome title - some awesome description 
