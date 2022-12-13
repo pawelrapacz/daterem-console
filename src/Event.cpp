@@ -26,7 +26,7 @@
 #include <ctime>
 #include "Event.hpp"
 
-namespace dr = date_rem;
+namespace dr = daterem;
 using std::cout, std::endl;
 
 unsigned short dr::Event::objCount = 0;

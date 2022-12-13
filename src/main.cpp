@@ -28,7 +28,7 @@
 #include "Event.hpp"
 
 namespace fs = std::filesystem;
-namespace dr = date_rem;
+namespace dr = daterem;
 
 std::vector < dr::Event* > s;
 
@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
         std::string currArg = argv[i];
         if ((currArg == "--help" || currArg == "-h") && argc == 2)
         {
-            dr::ShowHelp();
+            dr::ShowHelp(argv[0]);
             return EXIT_SUCCESS;
         }
 
@@ -146,10 +146,11 @@ void dr::ArgErr()
     exit(EXIT_FAILURE);
 }
 
-void dr::ShowHelp()
+void dr::ShowHelp(char* programArg)
 {
+    const auto helpPath{fs::absolute(programArg).parent_path() / "help.txt"};
     std::string line;
-    std::ifstream help("help.txt");
+    std::ifstream help(helpPath);
     if (!help.good()) exit(EXIT_FAILURE);
 
     while(getline(help, line))

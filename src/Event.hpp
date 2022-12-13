@@ -25,7 +25,7 @@
 #include <fstream>
 #include <filesystem>
 
-namespace date_rem
+namespace daterem
 {
     class Event
     {
@@ -79,7 +79,7 @@ namespace date_rem
     static const tm *ltm = localtime(&now);
 
     // FILES
-    const std::filesystem::path REMINDERS(std::string(getenv("APPDATA")).append("\\daterem\\reminders"));
+    const std::filesystem::path REMINDERS{std::filesystem::path(getenv("APPDATA")) / "daterem" / "reminders"};
     static std::fstream rem;
 
     // OTHER FUNCTIONS
@@ -89,7 +89,7 @@ namespace date_rem
     void DeleteOutOfDate();
     void DeleteEvent(unsigned short);
     unsigned short CheckEventNr(std::string);
-    void ShowHelp();
+    void ShowHelp(char*);
     void CheckEvents();
     std::string GetLocalDate();
     void ArgErr();
