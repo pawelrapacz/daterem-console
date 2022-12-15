@@ -37,13 +37,13 @@ daterem::Specified::Specified()
     short actualLine = 1;
     std::string line;
     while(getline(file, line)) {
-        if (actualLine == lineNum) m_Day = stoi(line);
-        else if (actualLine == lineNum + 1) m_Month = stoi(line);
-        else if (actualLine == lineNum + 2) m_Year = stoi(line);
+        if (actualLine == lineNum) m_Day = std::stoi(line);
+        else if (actualLine == lineNum + 1) m_Month = std::stoi(line);
+        else if (actualLine == lineNum + 2) m_Year = std::stoi(line);
         else if (actualLine == lineNum + 3) m_Title = line;
         else if (actualLine == lineNum + 4) m_Description = line;
-        else if (actualLine == lineNum + 5) m_EveryYearEvent = stoi(line);
-        else if (actualLine == lineNum + 6) m_RemBefore = stoi(line);
+        else if (actualLine == lineNum + 5) m_EveryYearEvent = std::stoi(line);
+        else if (actualLine == lineNum + 6) m_RemBefore = std::stoi(line);
         actualLine++;
     }
     file.close();
@@ -167,14 +167,14 @@ void daterem::Specified::Check() const
 
     if (today)
     {
-        anyEvent = true;
+        Event::anyEvent = true;
         std::cout << m_Title << " " << m_Description << std::endl;
     }
 
     if (before)
     {
-        anyEvent = true;
-        std::cout << "In day " + m_Title + " - " + m_Description + " is scheduled" << std::endl;
+        Event::anyEvent = true;
+        std::cout << "In day "+ GetFormatedDate() + " " + m_Title + " - " + m_Description + " is scheduled" << std::endl;
     }
 }
 

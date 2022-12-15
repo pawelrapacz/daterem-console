@@ -18,16 +18,63 @@
 */
 
 #include <string>
+#include <iostream>
+#include "headers/daterem.hpp"
 
-#include "headers/Weekly.hpp"
 
-
-daterem::Weekly::Weekly(/* args */)
+daterem::Weekly::Weekly()
 {
+    file.open(DATA_FILE, std::ios::in);
+    if (!file.good())
+    {
+        SetConsoleTextAttribute(hOut, 12);
+        std::clog << "Error! Cannot open the data file, create a new reminder first." << std::endl;
+        SetConsoleTextAttribute(hOut, 7);
+        exit(EXIT_FAILURE);
+    }
+    short lineNum = objCount * 3 + 1; // information on wich line the object data starts (every object takes 3 lines)
+    short actualLine = 1;
+    std::string line;
+    while(getline(file, line))
+    {
+        if (actualLine == lineNum) m_wDay = (wDay)std::stoi(line);
+        else if (actualLine == lineNum + 1) m_Title = line;
+        else if (actualLine == lineNum + 2) m_Description = line;
+        actualLine++;
+    }
+    file.close();
+    objCount++;
 }
+
+
+daterem::Weekly::Weekly(std::string d, std::string t, std::string des)
+{
+    bool exitStat = false;
+    std::string con;
+    
+    for (char i : d)
+        if (!isdigit(i)) exitStat = true;
+
+    if (std::stoi(d) > 6) exitStat = true;
+    else m_wDay = (wDay)std::stoi(d);
+
+    if (exitStat)
+    {
+        SetConsoleTextAttribute(hOut, 12);
+        std::clog << "Error! Wrong date format." << std::endl;
+        SetConsoleTextAttribute(hOut, 7);
+        exit(EXIT_FAILURE);
+    }
+
+    m_Title = t;
+    m_Description = des;
+    objCount++;
+}
+
 
 daterem::Weekly::~Weekly()
 {
+    objCount--;
 }
 
 
@@ -52,9 +99,34 @@ std::string daterem::Weekly::GetData() const
 
 void daterem::Weekly::Save() const
 {
+    file.open(DATA_FILE, std::ios::out | std::ios::app);
+    if (!file.good()){
+        file.close();
+        AppDataCheckMeta();
+        Save();
+    }
+    else
+    {
+        file << m_wDay;
+        file << '\n' << m_Title;
+        file << '\n' << m_Description;
+        file.close();
+    }
 }
 
 
 void daterem::Weekly::Check() const
 {
+    bool checked = false;
+
+    if (m_wDay == ltm->tm_wday) checked = true;
+
+    if (checked)
+    {
+        /**
+         * TODO: Better way to handle anyEvent \/
+        */
+        Event::anyEvent = true;
+        std::cout << m_Title << " " << m_Description << std::endl;
+    }
 }
