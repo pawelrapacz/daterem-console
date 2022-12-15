@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 
         else if ((currArg == "--version" || currArg == "-v") && argc == 2)
         {
-            std::cout << "daterem 1.0.0\nCopyright (C) 2022 Paweł Rapacz\nThis program comes with ABSOLUTELY NO WARRANTY;\nThis is free software, and you are welcome to redistribute it\nunder certain conditions.";
+            std::cout << "daterem 1.0.2\nCopyright (C) 2022 Paweł Rapacz\nThis program comes with ABSOLUTELY NO WARRANTY;\nThis is free software, and you are welcome to redistribute it\nunder certain conditions.";
             return EXIT_SUCCESS;
         }
 
@@ -143,6 +143,7 @@ void dr::ArgErr()
     SetConsoleTextAttribute(hOut, 12);
     std::clog << "Error! Incorrect syntax" << std::endl;
     std::clog << "Try \'daterem --help\' for more information.";
+    SetConsoleTextAttribute(hOut, 7);
     exit(EXIT_FAILURE);
 }
 
@@ -175,6 +176,7 @@ unsigned short dr::CheckEventNr(std::string num)
     if (n > Event::objCount || n == 0) {
         SetConsoleTextAttribute(hOut, 12);
         std::clog << "Error! No such event" << std::endl;
+        SetConsoleTextAttribute(hOut, 7);
         exit(EXIT_FAILURE);
     }
     else return n - 1;
@@ -265,7 +267,6 @@ void dr::DeleteOutOfDate()
         DeleteEvent(iter[i] - i);
 
 
-    SetConsoleTextAttribute(hOut, 7);
     std::cout << "Deleted: " << iter.size() << " reminders";
     iter.clear();
 }

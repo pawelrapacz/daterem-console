@@ -101,6 +101,7 @@ dr::Event::Event(std::string d, std::string t, std::string des)
     if (exitStat) {
         SetConsoleTextAttribute(hOut, 12);
         std::clog << "Error! Wrong date format." << endl;
+        SetConsoleTextAttribute(hOut, 7);
         exit(EXIT_FAILURE);
     }
 
@@ -168,8 +169,6 @@ void dr::Event::Check()
 }
 
 void dr::Event::ShowData(int i) {
-    if (i % 2 == 0) SetConsoleTextAttribute( hOut, 6);
-    else SetConsoleTextAttribute( hOut, 7);
     cout << i << " - " << fullDate << " - " << title << " - " << description << endl;
 }
 
