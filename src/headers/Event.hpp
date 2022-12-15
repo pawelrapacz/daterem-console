@@ -31,6 +31,7 @@ namespace daterem
         std::string m_Title;
         std::string m_Description;
         Event();
+        Event(std::string, std::string);
 
     public:
         virtual ~Event();

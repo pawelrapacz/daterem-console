@@ -47,7 +47,7 @@ daterem::Weekly::Weekly()
 }
 
 
-daterem::Weekly::Weekly(std::string d, std::string t, std::string des)
+daterem::Weekly::Weekly(std::string d, std::string t, std::string des) :Event(t, des)
 {
     bool exitStat = false;
     std::string con;
@@ -65,9 +65,6 @@ daterem::Weekly::Weekly(std::string d, std::string t, std::string des)
         SetConsoleTextAttribute(hOut, 7);
         exit(EXIT_FAILURE);
     }
-
-    m_Title = t;
-    m_Description = des;
     objCount++;
 }
 
@@ -109,7 +106,7 @@ void daterem::Weekly::Save() const
     {
         file << m_wDay;
         file << '\n' << m_Title;
-        file << '\n' << m_Description;
+        file << '\n' << m_Description << '\n';
         file.close();
     }
 }

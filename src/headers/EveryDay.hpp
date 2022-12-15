@@ -30,7 +30,8 @@ namespace daterem
         /* data */
 
     public:
-        EveryDay(/* args */);
+        EveryDay();
+        EveryDay(std::string, std::string);
         ~EveryDay();
 
     public:

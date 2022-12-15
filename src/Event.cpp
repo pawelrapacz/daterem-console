@@ -26,6 +26,13 @@ daterem::Event::Event()
     objCount++;
 }
 
+
+daterem::Event::Event(std::string t, std::string d) :m_Title(t), m_Description(d)
+{
+    objCount++;
+}
+
+
 daterem::Event::~Event()
 {
     objCount--;

@@ -18,16 +18,44 @@
 */
 
 #include <string>
+#include <iostream>
 
-#include "headers/EveryDay.hpp"
+#include "headers/daterem.hpp"
 
 
-daterem::EveryDay::EveryDay(/* args */)
+daterem::EveryDay::EveryDay()
 {
+    file.open(DATA_FILE, std::ios::in);
+    if (!file.good())
+    {
+        SetConsoleTextAttribute(hOut, 12);
+        std::clog << "Error! Cannot open the data file, create a new reminder first." << std::endl;
+        SetConsoleTextAttribute(hOut, 7);
+        exit(EXIT_FAILURE);
+    }
+    short lineNum = objCount * 2 + 1; // information on wich line the object data starts (every object takes 2 lines)
+    short actualLine = 1;
+    std::string line;
+    while(getline(file, line))
+    {
+        if (actualLine == lineNum) m_Title = line;
+        else if (actualLine == lineNum + 1) m_Description = line;
+        actualLine++;
+    }
+    file.close();
+    objCount++;
 }
+
+
+daterem::EveryDay::EveryDay(std::string t, std::string des) :Event(t, des)
+{
+    objCount++;
+}
+
 
 daterem::EveryDay::~EveryDay()
 {
+    objCount--;
 }
 
 
@@ -42,9 +70,22 @@ std::string daterem::EveryDay::GetData() const
 
 void daterem::EveryDay::Save() const
 {
+    file.open(DATA_FILE, std::ios::out | std::ios::app);
+    if (!file.good()){
+        file.close();
+        AppDataCheckMeta();
+        Save();
+    }
+    else
+    {
+        file << m_Title;
+        file << '\n' << m_Description << '\n';
+        file.close();
+    }
 }
 
 
 void daterem::EveryDay::Check() const
 {
+    std::cout << m_Title << " " << m_Description << std::endl;
 }

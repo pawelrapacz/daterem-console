@@ -57,7 +57,7 @@ daterem::Specified::Specified()
 }
 
 
-daterem::Specified::Specified(std::string d, std::string t, std::string des)
+daterem::Specified::Specified(std::string d, std::string t, std::string des) :Event(t, des)
 {
     bool exitStat = false;
     std::string con;
@@ -101,8 +101,6 @@ daterem::Specified::Specified(std::string d, std::string t, std::string des)
         exit(EXIT_FAILURE);
     }
 
-    m_Title = t;
-    m_Description = des;
     m_RemBefore = false;
     DefineRemBeforeDate();
     objCount++;
