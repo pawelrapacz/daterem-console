@@ -28,6 +28,8 @@ namespace daterem
     class Event
     {
     protected:
+        static std::fstream file;
+        
         std::string m_Title;
         std::string m_Description;
         Event();
@@ -37,7 +39,6 @@ namespace daterem
         virtual ~Event();
 
     public:
-        static std::fstream file;
         inline static unsigned int objCount{};
         inline static const std::filesystem::path DATA_FILE{NULL};
         inline static bool anyEvent = false;

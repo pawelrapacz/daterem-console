@@ -37,11 +37,7 @@ namespace daterem
     const time_t now = time(0);
     const tm *ltm = localtime(&now);
 
-    // FILES
-    const std::filesystem::path REMINDERS{std::filesystem::path(getenv("APPDATA")) / "daterem" / "reminders"};
-    static std::fstream rem;
 
-    // FUNCTIONS
     void GetSavedEvents();
     void SaveAllEvents();
     void ListAllEvents();

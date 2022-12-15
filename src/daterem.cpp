@@ -43,8 +43,8 @@ void dr::ListAllEvents() {
 
 unsigned short dr::CheckEventNr(std::string num)
 {
-    for (int i = 0; i < num.length(); i++)
-        if (!isdigit(num[i])) dr::ArgErr();
+    for (char i : num)
+        if (!isdigit(i)) ArgErr();
     
     unsigned short n = stoi(num);
 
@@ -62,14 +62,33 @@ unsigned short dr::CheckEventNr(std::string num)
 void dr::SaveAllEvents()
 {
     AppDataCheckMeta();
-    rem.open(REMINDERS, std::ios::out | std::ios::trunc);
-    if (!rem.good()){
+    std::fstream file;
+    file.open(EveryDay::DATA_FILE, std::ios::out | std::ios::trunc);
+    if (!file.good()){
         SetConsoleTextAttribute(hOut, 12);
         std::clog << "Error! Data file not found.";
         SetConsoleTextAttribute(hOut, 7);
         exit(EXIT_FAILURE);
     }
-    rem.close();
+    file.close();
+
+    file.open(Weekly::DATA_FILE, std::ios::out | std::ios::trunc);
+    if (!file.good()){
+        SetConsoleTextAttribute(hOut, 12);
+        std::clog << "Error! Data file not found.";
+        SetConsoleTextAttribute(hOut, 7);
+        exit(EXIT_FAILURE);
+    }
+    file.close();
+
+    file.open(Specified::DATA_FILE, std::ios::out | std::ios::trunc);
+    if (!file.good()){
+        SetConsoleTextAttribute(hOut, 12);
+        std::clog << "Error! Data file not found.";
+        SetConsoleTextAttribute(hOut, 7);
+        exit(EXIT_FAILURE);
+    }
+    file.close();
 
     for (int i = 0; i < Event::objCount; i++)
         s[i]->Save();
@@ -82,31 +101,70 @@ void dr::DeleteEvent(unsigned short n) {
     s.erase(s.begin() + n);
 }
 
-/**
- * ! need fix \/
-*/
+
 
 void dr::GetSavedEvents()
 {
+    std::fstream file;
     std::string line;
-    int numOfLines = 0;
-    rem.open(REMINDERS, std::ios::in);
-    if (!rem.good())
+    int numOfLines{};
     {
-        SetConsoleTextAttribute(hOut, 12);
-        std::clog << "Error! Cannot open the data file, create a new reminder first." << std::endl;
-        SetConsoleTextAttribute(hOut, 7);
-        exit(EXIT_FAILURE);
+        file.open(EveryDay::DATA_FILE, std::ios::in);
+        if (!file.good())
+        {
+            SetConsoleTextAttribute(hOut, 12);
+            std::clog << "Error! Cannot open the data file, create a new reminder first." << std::endl;
+            SetConsoleTextAttribute(hOut, 7);
+            exit(EXIT_FAILURE);
+        }
+
+        while (getline(file, line))
+            if (!line.empty()) numOfLines++;
+        
+        file.close();
+        for (int i = 0; i < (numOfLines / 7); i++)
+            s.push_back(new EveryDay);
+        
+        numOfLines = 0;
     }
+    {
+        file.open(Weekly::DATA_FILE, std::ios::in);
+        if (!file.good())
+        {
+            SetConsoleTextAttribute(hOut, 12);
+            std::clog << "Error! Cannot open the data file, create a new reminder first." << std::endl;
+            SetConsoleTextAttribute(hOut, 7);
+            exit(EXIT_FAILURE);
+        }
 
-    while (getline(rem, line))
-        if (!line.empty()) numOfLines++;
-    
-    rem.close();
-    // std::cout << numOfLines;
+        while (getline(file, line))
+            if (!line.empty()) numOfLines++;
+        
+        file.close();
+        for (int i = 0; i < (numOfLines / 7); i++)
+            s.push_back(new Weekly);
+        
+        numOfLines = 0;
+    }
+    {
+        file.open(Specified::DATA_FILE, std::ios::in);
+        if (!file.good())
+        {
+            SetConsoleTextAttribute(hOut, 12);
+            std::clog << "Error! Cannot open the data file, create a new reminder first." << std::endl;
+            SetConsoleTextAttribute(hOut, 7);
+            exit(EXIT_FAILURE);
+        }
 
-    // for (int i = 0; i < (numOfLines / 7); i++)
-    //     s.push_back(new Event);
+        while (getline(file, line))
+            if (!line.empty()) numOfLines++;
+        
+        file.close();
+        for (int i = 0; i < (numOfLines / 7); i++)
+            s.push_back(new Specified);
+        
+        numOfLines = 0;
+    }
 }
 
 
@@ -118,8 +176,7 @@ void dr::CheckEvents()
         s[i]->Check();
 
 
-    if (!Event::anyEvent)
-        std::cout << "No reminders scheduled for today";
+    if (!Event::anyEvent) std::cout << "No reminders scheduled for today";
 }
 
 
@@ -146,10 +203,24 @@ std::string dr::GetLocalDate()
 
 void dr::AppDataCheckMeta()
 {
-    if (!fs::is_directory(REMINDERS.parent_path()) || !fs::is_regular_file(REMINDERS))
+    if (!fs::is_directory(EveryDay::DATA_FILE.parent_path()) || !fs::is_regular_file(EveryDay::DATA_FILE))
     {
-        fs::remove_all(REMINDERS.parent_path());
-        fs::create_directory(REMINDERS.parent_path());
-        std::ofstream(REMINDERS).write(0, 0);
+        fs::remove_all(EveryDay::DATA_FILE.parent_path());
+        fs::create_directory(EveryDay::DATA_FILE.parent_path());
+        std::ofstream(EveryDay::DATA_FILE).write(0, 0);
+    }
+
+    if (!fs::is_directory(Weekly::DATA_FILE.parent_path()) || !fs::is_regular_file(Weekly::DATA_FILE))
+    {
+        fs::remove_all(Weekly::DATA_FILE.parent_path());
+        fs::create_directory(Weekly::DATA_FILE.parent_path());
+        std::ofstream(Weekly::DATA_FILE).write(0, 0);
+    }
+
+    if (!fs::is_directory(Specified::DATA_FILE.parent_path()) || !fs::is_regular_file(Specified::DATA_FILE))
+    {
+        fs::remove_all(Specified::DATA_FILE.parent_path());
+        fs::create_directory(Specified::DATA_FILE.parent_path());
+        std::ofstream(Specified::DATA_FILE).write(0, 0);
     }
 }
