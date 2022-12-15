@@ -1,6 +1,9 @@
 .vscode/
 public/
 test/
+build/
+
+
 compile.bat
 test.cpp
 args.txt

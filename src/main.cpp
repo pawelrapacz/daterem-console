@@ -25,7 +25,7 @@
 #include <fstream>
 #include <ctime>
 #include <filesystem>
-#include "Event.hpp"
+#include "headers/daterem.hpp"
 
 namespace fs = std::filesystem;
 namespace dr = daterem;
@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 
         else if ((currArg == "--version" || currArg == "-v") && argc == 2)
         {
-            std::cout << "daterem 1.0.2\nCopyright (C) 2022 Paweł Rapacz\nThis program comes with ABSOLUTELY NO WARRANTY;\nThis is free software, and you are welcome to redistribute it\nunder certain conditions.";
+            std::cout << "daterem 2.0.0\nCopyright (C) 2022 Paweł Rapacz\nThis program comes with ABSOLUTELY NO WARRANTY;\nThis is free software, and you are welcome to redistribute it\nunder certain conditions.";
             return EXIT_SUCCESS;
         }
 

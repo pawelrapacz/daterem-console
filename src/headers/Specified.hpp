@@ -19,15 +19,11 @@
 
 
 #pragma once
-
-#include <windows.h>
-#include <string>
-#include <fstream>
-#include <filesystem>
+#include "Event.hpp"
 
 namespace daterem
 {
-    class Event
+    class Specified : public Event
     {
     private:
         /**
@@ -52,46 +48,27 @@ namespace daterem
         unsigned short year;
         unsigned short fRem[3];
         unsigned short sRem[3];
-        std::string title;
-        std::string description;
-        std::string fullDate;
         bool everyYearEvent;
         bool remBefore;
+
     public:
         static bool anyEvent;
         static unsigned short objCount;
-        Event();
-        Event(std::string, std::string, std::string);
-        ~Event();
+
+    public:
+        Specified();
+        Specified(std::string, std::string, std::string);
+        ~Specified();
+
+    public:
+        void ShowData(int) override;
+        void Save() override;
+        void Check() override;
+
 
         bool CheckOutOfDate();
         void DefineDate();
-        void ShowData(int);
-        void Save();
-        void Check();
         void SetToEveryYearEvent();
         void SetToRemBefore();
     };
-
-    const HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-
-    static const time_t now = time(0);
-    static const tm *ltm = localtime(&now);
-
-    // FILES
-    const std::filesystem::path REMINDERS{std::filesystem::path(getenv("APPDATA")) / "daterem" / "reminders"};
-    static std::fstream rem;
-
-    // OTHER FUNCTIONS
-    void GetSavedEvents();
-    void SaveAllEvents();
-    void ListAllEvents();
-    void DeleteOutOfDate();
-    void DeleteEvent(unsigned short);
-    unsigned short CheckEventNr(std::string);
-    void ShowHelp(char*);
-    void CheckEvents();
-    std::string GetLocalDate();
-    void ArgErr();
-    void AppDataCheckMeta(); // Checks whether users data exists, if not creates it
 }
