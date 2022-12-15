@@ -20,6 +20,7 @@
 
 #pragma once
 #include <string>
+#include <fstream>
 #include <filesystem>
 
 namespace daterem
@@ -35,6 +36,7 @@ namespace daterem
         virtual ~Event();
 
     public:
+        static std::fstream file;
         inline static unsigned int objCount{};
         inline static const std::filesystem::path DATA_FILE{NULL};
         inline static bool anyEvent = false;

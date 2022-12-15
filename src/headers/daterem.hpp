@@ -45,7 +45,6 @@ namespace daterem
     void GetSavedEvents();
     void SaveAllEvents();
     void ListAllEvents();
-    void DeleteOutOfDate();
     void DeleteEvent(unsigned short);
     unsigned short CheckEventNr(std::string);
     void ShowHelp(char*);

@@ -21,6 +21,7 @@
 #pragma once
 #include <string>
 #include <filesystem>
+#include <vector>
 #include "Event.hpp"
 
 namespace daterem
@@ -43,15 +44,22 @@ namespace daterem
 
     public:
         inline static const std::filesystem::path DATA_FILE{std::filesystem::path(getenv("APPDATA")) / "daterem" / "Specified"};
+        /**
+         * ! insts desn't work -> no idea why
+        */
+        static std::vector < Specified* > insts; // table of pointers to all instances
 
     public:
         std::string GetData() const override;
         void Save() const override;
         void Check() const override;
 
+        std::string GetFormatedDate() const;
         bool CheckOutOfDate();
-        void DefineDate();
-        void SetToEveryYearEvent();
-        void SetToRemBefore();
+        void DefineRemBeforeDate();
+        void SetEveryYearEvent();
+        void SetRemBefore();
+
+        static void DeleteOutOfDate();
     };
 }
