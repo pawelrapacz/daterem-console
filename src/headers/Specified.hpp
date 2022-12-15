@@ -19,6 +19,8 @@
 
 
 #pragma once
+#include <string>
+#include <filesystem>
 #include "Event.hpp"
 
 namespace daterem
@@ -26,34 +28,13 @@ namespace daterem
     class Specified : public Event
     {
     private:
-        /**
-         * day, month, year - reminder date;
-         * 
-         * fRem[3] - first reminder date [0]day [1]month [2]year;
-         * 
-         * sRem[3] - second reminder date;
-         * 
-         * fullDate - represents date in DD.MM.YYYY or DD.MM format
-         * 
-         * everyYearEvent - if true the reminder is set for every year with no year specified,
-         * else the reminder is single event with year precised (SetToEveryYearEvent() method changes the value
-         * to true even if the year is specified -> [-e] option) [defaulut: based on the date];
-         * 
-         * remBefore - if true the reminder is additionally displayed two times before specified date,
-         * else the reminder displays only in the specified date [defaulut: false]
-         * (SetToRemBefore() sets the value to true);
-        */
-        unsigned short day;
-        unsigned short month;
-        unsigned short year;
-        unsigned short fRem[3];
-        unsigned short sRem[3];
-        bool everyYearEvent;
-        bool remBefore;
-
-    public:
-        static bool anyEvent;
-        static unsigned short objCount;
+        unsigned short m_Day;
+        unsigned short m_Month;
+        unsigned short m_Year;
+        unsigned short m_fRem[3];
+        unsigned short m_sRem[3];
+        bool m_EveryYearEvent;
+        bool m_RemBefore;
 
     public:
         Specified();
@@ -61,10 +42,12 @@ namespace daterem
         ~Specified();
 
     public:
-        void ShowData(int) override;
-        void Save() override;
-        void Check() override;
+        inline static const std::filesystem::path DATA_FILE{std::filesystem::path(getenv("APPDATA")) / "daterem" / "Specified"};
 
+    public:
+        std::string GetData() const override;
+        void Save() const override;
+        void Check() const override;
 
         bool CheckOutOfDate();
         void DefineDate();

@@ -20,23 +20,28 @@
 
 #pragma once
 #include <string>
+#include <filesystem>
 
 namespace daterem
 {
     class Event
     {
     protected:
-        std::string title;
-        std::string description;
-        std::string fullDate;
+        std::string m_Title;
+        std::string m_Description;
+        Event();
 
     public:
-        Event();
-        ~Event();
+        virtual ~Event();
+
+    public:
+        inline static unsigned int objCount{};
+        inline static const std::filesystem::path DATA_FILE{NULL};
+        inline static bool anyEvent = false;
 
     public: 
-        virtual void ShowData(int) = 0;
-        virtual void Save() = 0;
-        virtual void Check() = 0;
+        virtual std::string GetData() const = 0;
+        virtual void Save() const = 0;
+        virtual void Check() const = 0;
     }; 
 }

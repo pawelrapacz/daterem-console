@@ -168,7 +168,8 @@ void dr::Event::Check()
     }
 }
 
-void dr::Event::ShowData(int i) {
+void dr::Event::ShowData(int i) const
+{
     cout << i << " - " << fullDate << " - " << title << " - " << description << endl;
 }
 

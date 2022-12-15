@@ -17,6 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <string>
 
 #include "headers/EveryDay.hpp"
 
@@ -33,16 +34,17 @@ daterem::EveryDay::~EveryDay()
 
 
 
-void daterem::EveryDay::ShowData(int)
+std::string daterem::EveryDay::GetData() const
+{
+    return " - Everyday - " + m_Title + " - " + m_Description + '\n';
+}
+
+
+void daterem::EveryDay::Save() const
 {
 }
 
 
-void daterem::EveryDay::Save()
-{
-}
-
-
-void daterem::EveryDay::Check()
+void daterem::EveryDay::Check() const
 {
 }

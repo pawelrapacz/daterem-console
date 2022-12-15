@@ -19,6 +19,7 @@
 
 
 #pragma once
+#include <filesystem>
 #include "Event.hpp"
 
 namespace daterem
@@ -37,15 +38,18 @@ namespace daterem
             SATURDAY
         };
 
-        wDay m_day;
+        wDay m_wDay;
 
     public:
         Weekly(/* args */);
         ~Weekly();
 
     public:
-        void ShowData(int) override;
-        void Save() override;
-        void Check() override;
+        inline static const std::filesystem::path DATA_FILE{std::filesystem::path(getenv("APPDATA")) / "daterem" / "Weekly"};
+
+    public:
+        std::string GetData() const override;
+        void Save() const override;
+        void Check() const override;
     };
 }

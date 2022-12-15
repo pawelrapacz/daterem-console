@@ -17,6 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <string>
 
 #include "headers/Weekly.hpp"
 
@@ -33,16 +34,27 @@ daterem::Weekly::~Weekly()
 
 
 
-void daterem::Weekly::ShowData(int)
+std::string daterem::Weekly::GetData() const
+{
+    static const std::string days[]
+    {
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednsday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+    };
+    return " - "  + days[m_wDay] + " - " + m_Title + " - " + m_Description + '\n';
+}
+
+
+void daterem::Weekly::Save() const
 {
 }
 
 
-void daterem::Weekly::Save()
-{
-}
-
-
-void daterem::Weekly::Check()
+void daterem::Weekly::Check() const
 {
 }

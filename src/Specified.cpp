@@ -17,6 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <string>
 
 #include "headers/Specified.hpp"
 
@@ -33,16 +34,26 @@ daterem::Specified::~Specified()
 
 
 
-void daterem::Specified::ShowData(int)
+std::string daterem::Specified::GetData() const
+{
+    std::string date;
+    if (m_Day <= 9) date = "0" + std::to_string(m_Day) + ".";
+    else date= std::to_string(m_Day) + ".";
+
+    if (m_Month <= 9) date += "0" + std::to_string(m_Month);
+    else date += std::to_string(m_Month);
+
+    if (!m_EveryYearEvent) date += "." + std::to_string(m_Year);
+
+    return " - " + date + " - " + m_Title + " - " + m_Description + '\n';
+}
+
+
+void daterem::Specified::Save() const
 {
 }
 
 
-void daterem::Specified::Save()
-{
-}
-
-
-void daterem::Specified::Check()
+void daterem::Specified::Check() const
 {
 }

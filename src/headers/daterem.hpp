@@ -20,30 +20,28 @@
 
 #pragma once
 
-#include "Event.hpp"
-#include "Specified.hpp"
-#include "Weekly.hpp"
-#include "EveryDay.hpp"
-
-
-
 #include <windows.h>
 #include <string>
 #include <fstream>
 #include <filesystem>
 
+#include "Event.hpp"
+#include "Specified.hpp"
+#include "Weekly.hpp"
+#include "EveryDay.hpp"
+
 namespace daterem
 {
     const HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 
-    static const time_t now = time(0);
-    static const tm *ltm = localtime(&now);
+    const time_t now = time(0);
+    const tm *ltm = localtime(&now);
 
     // FILES
     const std::filesystem::path REMINDERS{std::filesystem::path(getenv("APPDATA")) / "daterem" / "reminders"};
     static std::fstream rem;
 
-    // OTHER FUNCTIONS
+    // FUNCTIONS
     void GetSavedEvents();
     void SaveAllEvents();
     void ListAllEvents();
