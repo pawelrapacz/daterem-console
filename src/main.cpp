@@ -18,10 +18,11 @@
 */
 
 
-#include <iostream>
 #include <vector>
 #include <typeinfo>
+#include <windows.h>
 #include "headers/daterem.hpp"
+#include "headers/LOG.hpp"
 
 namespace dr = daterem;
 
@@ -51,7 +52,7 @@ int main(int argc, char *argv[])
 
         else if ((currArg == "--version" || currArg == "-v") && argc == 2)
         {
-            std::cout << "daterem 2.0.0\nCopyright (C) 2022 Paweł Rapacz\nThis program comes with ABSOLUTELY NO WARRANTY;\nThis is free software, and you are welcome to redistribute it\nunder certain conditions.";
+            Log.print(L_NONE, "daterem 2.0.0\nCopyright (C) 2022 Paweł Rapacz\nThis program comes with ABSOLUTELY NO WARRANTY;\nThis is free software, and you are welcome to redistribute it under certain conditions.");
             return EXIT_SUCCESS;
         }
 
@@ -100,7 +101,7 @@ int main(int argc, char *argv[])
             dr::EveryDay rem(std::string(argv[i + 1]), argv[i + 2]);
 
             rem.Save();
-            std::cout << "Successfully created new reimnder.";
+            Log.print(L_NONE, "Successfully created new reimnder");
             return EXIT_SUCCESS;
         }
 
@@ -130,7 +131,7 @@ int main(int argc, char *argv[])
                 rem.Save();
             }
 
-            std::cout << "Successfully created new reimnder.";
+            Log.print(L_NONE, "Successfully created new reimnder");
             return EXIT_SUCCESS;
         }
 
@@ -159,6 +160,6 @@ int main(int argc, char *argv[])
             std::string(argv[i + 1]) == "-n" ||
             std::string(argv[i + 2]) == "-n"
         ))) 
-            dr::ArgErr();
+            Log.print(L_ERROR, "Incorrect syntax\nTry \'daterem --help\' for more information.");
     }
 }

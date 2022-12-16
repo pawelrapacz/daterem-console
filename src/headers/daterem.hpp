@@ -20,7 +20,6 @@
 
 #pragma once
 
-#include <windows.h>
 #include <string>
 #include <fstream>
 #include <filesystem>
@@ -32,8 +31,6 @@
 
 namespace daterem
 {
-    const HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-
     const time_t now = time(0);
     const tm *ltm = localtime(&now);
 

@@ -1,21 +1,12 @@
 #include <iostream>
 #include <filesystem>
 #include "headers/daterem.hpp"
+#include "headers/LOG.hpp"
 
 namespace fs = std::filesystem;
 namespace dr = daterem;
 
 extern std::vector < daterem::Event* > s;
-
-void dr::ArgErr()
-{
-    SetConsoleTextAttribute(hOut, 12);
-    std::clog << "Error! Incorrect syntax" << std::endl;
-    std::clog << "Try \'daterem --help\' for more information.";
-    SetConsoleTextAttribute(hOut, 7);
-    exit(EXIT_FAILURE);
-}
-
 
 
 void dr::ShowHelp(char* programArg)
@@ -48,12 +39,7 @@ unsigned short dr::CheckEventNr(std::string num)
     
     unsigned short n = stoi(num);
 
-    if (n > Event::objCount || n == 0) {
-        SetConsoleTextAttribute(hOut, 12);
-        std::clog << "Error! No such event" << std::endl;
-        SetConsoleTextAttribute(hOut, 7);
-        exit(EXIT_FAILURE);
-    }
+    if (n > Event::objCount || n == 0) Log.print(L_ERROR, "No such event");
     else return n - 1;
 }
 
@@ -64,30 +50,15 @@ void dr::SaveAllEvents()
     AppDataCheckMeta();
     std::fstream file;
     file.open(EveryDay::DATA_FILE, std::ios::out | std::ios::trunc);
-    if (!file.good()){
-        SetConsoleTextAttribute(hOut, 12);
-        std::clog << "Error! Data file not found.";
-        SetConsoleTextAttribute(hOut, 7);
-        exit(EXIT_FAILURE);
-    }
+    if (!file.good()) Log.print(L_ERROR, "Data file not found");
     file.close();
 
     file.open(Weekly::DATA_FILE, std::ios::out | std::ios::trunc);
-    if (!file.good()){
-        SetConsoleTextAttribute(hOut, 12);
-        std::clog << "Error! Data file not found.";
-        SetConsoleTextAttribute(hOut, 7);
-        exit(EXIT_FAILURE);
-    }
+    if (!file.good()) Log.print(L_ERROR, "Data file not found");
     file.close();
 
     file.open(Specified::DATA_FILE, std::ios::out | std::ios::trunc);
-    if (!file.good()){
-        SetConsoleTextAttribute(hOut, 12);
-        std::clog << "Error! Data file not found.";
-        SetConsoleTextAttribute(hOut, 7);
-        exit(EXIT_FAILURE);
-    }
+    if (!file.good()) Log.print(L_ERROR, "Data file not found");
     file.close();
 
     for (int i = 0; i < Event::objCount; i++)
@@ -114,7 +85,7 @@ void dr::GetAllSavedEvents()
 
 void dr::CheckEvents()
 {
-    std::cout << "[" << GetLocalDate() << "]" << std::endl << std::endl;
+    std::cout << "[" << GetLocalDate() << "]" << '\n\n';
     for (int i = 0; i < Event::objCount; i++)
         s[i]->Check();
 

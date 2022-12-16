@@ -21,19 +21,15 @@
 #include <iostream>
 
 #include "headers/daterem.hpp"
+#include "headers/LOG.hpp"
 
 extern std::vector < daterem::Event* > s;
 
 daterem::EveryDay::EveryDay()
 {
     file.open(DATA_FILE, std::ios::in);
-    if (!file.good())
-    {
-        SetConsoleTextAttribute(hOut, 12);
-        std::clog << "Error! Cannot open the data file, create a new reminder first." << std::endl;
-        SetConsoleTextAttribute(hOut, 7);
-        exit(EXIT_FAILURE);
-    }
+    if (!file.good()) Log.print(L_ERROR, "Cannot open the data file, create a new reminder first");
+
     short lineNum = objCount * 2 + 1; // information on wich line the object data starts (every object takes 2 lines)
     short actualLine = 1;
     std::string line;
@@ -100,13 +96,7 @@ void daterem::EveryDay::GetSavedEvents()
     std::string line;
     unsigned int numOfLines{};
     file.open(DATA_FILE, std::ios::in);
-    if (!file.good())
-    {
-        // SetConsoleTextAttribute(hOut, 12);
-        // std::clog << "Error! Cannot open the data file, create a new reminder first." << std::endl;
-        // SetConsoleTextAttribute(hOut, 7);
-        exit(EXIT_FAILURE);
-    }
+    if (!file.good()) Log.print(L_ERROR, "Cannot open the data file, create a new reminder first");
 
     while (getline(file, line))
         if (!line.empty()) numOfLines++;
