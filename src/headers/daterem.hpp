@@ -31,10 +31,6 @@
 
 namespace daterem
 {
-    const time_t now = time(0);
-    const tm *ltm = localtime(&now);
-
-
     void GetAllSavedEvents();
     void SaveAllEvents();
     void ListAllEvents();
@@ -43,6 +39,5 @@ namespace daterem
     void ShowHelp(char*);
     void CheckEvents();
     std::string GetLocalDate();
-    void ArgErr();
     void AppDataCheckMeta(); // Checks whether users data exists, if not creates it
 }

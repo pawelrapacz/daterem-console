@@ -22,7 +22,7 @@
 #include <typeinfo>
 #include <windows.h>
 #include "headers/daterem.hpp"
-#include "headers/LOG.hpp"
+#include "headers/Log.hpp"
 
 namespace dr = daterem;
 
@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 
         else if ((currArg == "--version" || currArg == "-v") && argc == 2)
         {
-            Log.print(L_NONE, "daterem 2.0.0\nCopyright (C) 2022 Paweł Rapacz\nThis program comes with ABSOLUTELY NO WARRANTY;\nThis is free software, and you are welcome to redistribute it under certain conditions.");
+            print(L_NONE, "daterem 2.0.0\nCopyright (C) 2022 Paweł Rapacz\nThis program comes with ABSOLUTELY NO WARRANTY;\nThis is free software, and you are welcome to redistribute it under certain conditions.");
             return EXIT_SUCCESS;
         }
 
@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
             {
                 dr::Specified::insts[eventNumber]->SetEveryYearEvent();
             }
-            else Log.print(L_ERROR, "Ony reminders with specified date can be modified with this option");
+            else print(L_ERROR, "Ony reminders with specified date can be modified with this option");
 
             dr::SaveAllEvents();
             return EXIT_SUCCESS;
@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
             {
                 dr::Specified::insts[eventNumber]->SetRemBefore();
             }
-            else Log.print(L_ERROR, "Ony reminders with specified date can be modified with this option");
+            else print(L_ERROR, "Ony reminders with specified date can be modified with this option");
 
             dr::SaveAllEvents();
             return EXIT_SUCCESS;
@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
             dr::EveryDay rem(std::string(argv[i + 1]), argv[i + 2]);
 
             rem.Save();
-            Log.print(L_NONE, "Successfully created new reimnder");
+            print(L_NONE, "Successfully created new reimnder");
             return EXIT_SUCCESS;
         }
 
@@ -128,13 +128,14 @@ int main(int argc, char *argv[])
                     {
                         if (std::string(argv[j]) == "-e") rem.SetEveryYearEvent();
                         else if (std::string(argv[j]) == "-b") rem.SetRemBefore();
-                        else if (!(argv[j] == argv[i] || argv[j] == argv[i + 1] || argv[j] == argv[i + 2] || argv[j] == argv[i + 3])) dr::ArgErr();
+                        else if (!(argv[j] == argv[i] || argv[j] == argv[i + 1] || argv[j] == argv[i + 2] || argv[j] == argv[i + 3]))
+                            print(L_ERROR, "Incorrect syntax\nTry \'daterem --help\' for more information.");
                     }
                 }
                 rem.Save();
             }
 
-            Log.print(L_NONE, "Successfully created new reimnder");
+            print(L_NONE, "Successfully created new reimnder");
             return EXIT_SUCCESS;
         }
 
@@ -163,6 +164,6 @@ int main(int argc, char *argv[])
             std::string(argv[i + 1]) == "-n" ||
             std::string(argv[i + 2]) == "-n"
         ))) 
-            Log.print(L_ERROR, "Incorrect syntax\nTry \'daterem --help\' for more information.");
+            print(L_ERROR, "Incorrect syntax\nTry \'daterem --help\' for more information.");
     }
 }

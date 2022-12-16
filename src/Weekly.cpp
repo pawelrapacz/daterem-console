@@ -20,14 +20,16 @@
 #include <string>
 #include <iostream>
 #include "headers/daterem.hpp"
-#include "headers/LOG.hpp"
+#include "headers/Log.hpp"
 
 extern std::vector < daterem::Event* > s;
+extern const time_t now;
+extern const tm *ltm;
 
 daterem::Weekly::Weekly()
 {
     file.open(DATA_FILE, std::ios::in);
-    if (!file.good()) Log.print(L_ERROR, "Cannot open the data file, create a new reminder first");
+    if (!file.good()) print(L_ERROR, "Cannot open the data file, create a new reminder first");
 
     short lineNum = objCount * 3 + 1; // information on wich line the object data starts (every object takes 3 lines)
     short actualLine = 1;
@@ -55,7 +57,7 @@ daterem::Weekly::Weekly(std::string d, std::string t, std::string des) : Event(t
     if (std::stoi(d) > 6) exitStat = true;
     else m_wDay = (wDay)std::stoi(d);
 
-    if (exitStat) Log.print(L_ERROR, "Wrong date format");
+    if (exitStat) print(L_ERROR, "Wrong date format");
 
     objCount++;
 }
@@ -128,13 +130,13 @@ void daterem::Weekly::GetSavedEvents()
     std::string line;
     unsigned int numOfLines{};
     file.open(DATA_FILE, std::ios::in);
-    if (!file.good()) Log.print(L_ERROR, "Cannot open the data file, create a new reminder first");
+    if (!file.good()) print(L_ERROR, "Cannot open the data file, create a new reminder first");
 
     while (getline(file, line))
         if (!line.empty()) numOfLines++;
     
     file.close();
-    for (int i = 0; i < (numOfLines / 7); i++)
+    for (unsigned int i = 0; i < (numOfLines / LINES_PER_OBJ); i++)
         s.push_back(new Weekly);
     
     numOfLines = 0;

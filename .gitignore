@@ -4,6 +4,6 @@ test/
 build/
 
 
-compile.bat
+*.bat
 test.cpp
 args.txt

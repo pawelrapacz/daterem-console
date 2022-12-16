@@ -1,10 +1,12 @@
-#include <iostream>
 #include <filesystem>
 #include "headers/daterem.hpp"
-#include "headers/LOG.hpp"
+#include "headers/Log.hpp"
 
 namespace fs = std::filesystem;
 namespace dr = daterem;
+
+const time_t now = time(0);
+const tm *ltm = localtime(&now);
 
 extern std::vector < daterem::Event* > s;
 
@@ -35,12 +37,13 @@ void dr::ListAllEvents() {
 unsigned short dr::CheckEventNr(std::string num)
 {
     for (char i : num)
-        if (!isdigit(i)) ArgErr();
+        if (!isdigit(i)) print(L_ERROR, "Incorrect syntax\nTry \'daterem --help\' for more information.");
     
     unsigned short n = stoi(num);
 
-    if (n > Event::objCount || n == 0) Log.print(L_ERROR, "No such event");
-    else return n - 1;
+    if (n > Event::objCount || n == 0) print(L_ERROR, "No such event");
+    
+    return n - 1;
 }
 
 
@@ -50,15 +53,15 @@ void dr::SaveAllEvents()
     AppDataCheckMeta();
     std::fstream file;
     file.open(EveryDay::DATA_FILE, std::ios::out | std::ios::trunc);
-    if (!file.good()) Log.print(L_ERROR, "Data file not found");
+    if (!file.good()) print(L_ERROR, "Data file not found");
     file.close();
 
     file.open(Weekly::DATA_FILE, std::ios::out | std::ios::trunc);
-    if (!file.good()) Log.print(L_ERROR, "Data file not found");
+    if (!file.good()) print(L_ERROR, "Data file not found");
     file.close();
 
     file.open(Specified::DATA_FILE, std::ios::out | std::ios::trunc);
-    if (!file.good()) Log.print(L_ERROR, "Data file not found");
+    if (!file.good()) print(L_ERROR, "Data file not found");
     file.close();
 
     for (int i = 0; i < Event::objCount; i++)
@@ -86,7 +89,7 @@ void dr::GetAllSavedEvents()
 
 void dr::CheckEvents()
 {
-    std::cout << "[" << GetLocalDate() << "]" << '\n\n';
+    std::cout << "[" << GetLocalDate() << "]" << "\n\n";
     for (int i = 0; i < Event::objCount; i++)
         s[i]->Check();
 
