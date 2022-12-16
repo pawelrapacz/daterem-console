@@ -16,23 +16,27 @@ DESCRIPTION
             List all scheduled reminders.
         
         -c, --check
-            Shows all reminders scheduled for current day.
+            Shows all reminders scheduled for the current day.
         
         -n, --new [date] [title] [description]
             Creates new reminder for given date, date format: DD.MM for every year reminder and DD.MM.YYYY for sigle reminder.
+            To create weeakly reminder set date to number [0 - 6] days since Sunday.
+            When date not set creates everyday reminder.
 
         -e [number]
-            Converts reminder with indicated number to be every year (use --list to see the numeration).
+            Only for one time reminders
 
-            Used with -n or --new e.g. (-e --new ...) forces created reminder to be every year, if used like this do not set the number.
+            Converts reminder with indicated number to be every year (use --list to see the numeration).
+            When used with -n or --new e.g. (-e --new ...) forces created reminder to be every year, if used like this do not set the number.
 
         -b [number]
-            Sets two additional reminders 7 days and 2 days before specified date (use --list to see the numeration).
+            Only for annual or one time reminders
 
+            Sets two additional reminders 7 days and 2 days before specified date, if turned on turns off (use --list to see the numeration).
             When used with -n or --new, e.g. (-b --new ...) do not set the number.
 
         --delete [number]
             Deletes reminder with indicated number (use --list to see the numeration).
 
         -o, --delete-outdated
-            Deletes all reminders that expired, does not apply to every year reminders.
+            Deletes all reminders that expired, applies only to one time reminders.
