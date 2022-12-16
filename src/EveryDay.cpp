@@ -22,6 +22,7 @@
 
 #include "headers/daterem.hpp"
 
+extern std::vector < daterem::Event* > s;
 
 daterem::EveryDay::EveryDay()
 {
@@ -88,4 +89,31 @@ void daterem::EveryDay::Save() const
 void daterem::EveryDay::Check() const
 {
     std::cout << m_Title << " " << m_Description << std::endl;
+}
+
+
+
+
+
+void daterem::EveryDay::GetSavedEvents()
+{
+    std::string line;
+    unsigned int numOfLines{};
+    file.open(DATA_FILE, std::ios::in);
+    if (!file.good())
+    {
+        // SetConsoleTextAttribute(hOut, 12);
+        // std::clog << "Error! Cannot open the data file, create a new reminder first." << std::endl;
+        // SetConsoleTextAttribute(hOut, 7);
+        exit(EXIT_FAILURE);
+    }
+
+    while (getline(file, line))
+        if (!line.empty()) numOfLines++;
+    
+    file.close();
+    for (int i = 0; i < (numOfLines / 7); i++)
+        s.push_back(new EveryDay);
+    
+    numOfLines = 0;
 }

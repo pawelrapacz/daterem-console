@@ -38,7 +38,7 @@ namespace daterem
     const tm *ltm = localtime(&now);
 
 
-    void GetSavedEvents();
+    void GetAllSavedEvents();
     void SaveAllEvents();
     void ListAllEvents();
     void DeleteEvent(unsigned short);

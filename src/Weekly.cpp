@@ -21,6 +21,7 @@
 #include <iostream>
 #include "headers/daterem.hpp"
 
+extern std::vector < daterem::Event* > s;
 
 daterem::Weekly::Weekly()
 {
@@ -80,16 +81,6 @@ daterem::Weekly::~Weekly()
 
 std::string daterem::Weekly::GetData() const
 {
-    static const std::string days[]
-    {
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednsday",
-        "Thursday",
-        "Friday",
-        "Saturday"
-    };
     return " - "  + days[m_wDay] + " - " + m_Title + " - " + m_Description + '\n';
 }
 
@@ -126,4 +117,40 @@ void daterem::Weekly::Check() const
         Event::anyEvent = true;
         std::cout << m_Title << " " << m_Description << std::endl;
     }
+}
+
+
+
+
+
+bool daterem::Weekly::CheckIfWDay(std::string str)
+{
+    for (std::string i : days)
+        if (i == str) return true;
+
+    return false;
+}
+
+
+void daterem::Weekly::GetSavedEvents()
+{
+    std::string line;
+    unsigned int numOfLines{};
+    file.open(DATA_FILE, std::ios::in);
+    if (!file.good())
+    {
+        // SetConsoleTextAttribute(hOut, 12);
+        // std::clog << "Error! Cannot open the data file, create a new reminder first." << std::endl;
+        // SetConsoleTextAttribute(hOut, 7);
+        exit(EXIT_FAILURE);
+    }
+
+    while (getline(file, line))
+        if (!line.empty()) numOfLines++;
+    
+    file.close();
+    for (int i = 0; i < (numOfLines / 7); i++)
+        s.push_back(new Weekly);
+    
+    numOfLines = 0;
 }

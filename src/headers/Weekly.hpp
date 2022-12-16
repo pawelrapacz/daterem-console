@@ -27,6 +27,17 @@ namespace daterem
     class Weekly : public Event
     {
     private:
+        inline static const std::string days[]
+        {
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednsday",
+            "Thursday",
+            "Friday",
+            "Saturday"
+        };
+
         enum wDay : unsigned short
         {
             SUNDAY,
@@ -52,5 +63,8 @@ namespace daterem
         std::string GetData() const override;
         void Save() const override;
         void Check() const override;
+
+        static void GetSavedEvents();
+        static bool CheckIfWDay(std::string);
     };
 }

@@ -20,14 +20,9 @@
 
 #include <iostream>
 #include <vector>
-#include <windows.h>
-#include <string>
-#include <fstream>
-#include <ctime>
-#include <filesystem>
+#include <typeinfo>
 #include "headers/daterem.hpp"
 
-namespace fs = std::filesystem;
 namespace dr = daterem;
 
 std::vector < dr::Event* > s;
@@ -40,7 +35,7 @@ int main(int argc, char *argv[])
 
     if (argc == 1)
     {
-        dr::GetSavedEvents();
+        dr::GetAllSavedEvents();
         dr::CheckEvents();
         return EXIT_SUCCESS;
     }
@@ -62,56 +57,86 @@ int main(int argc, char *argv[])
 
         else if ((currArg == "--list" || currArg == "-l") && argc == 2)
         {
-            dr::GetSavedEvents();
+            dr::GetAllSavedEvents();
             dr::ListAllEvents();
             return EXIT_SUCCESS;
         }
 
         else if ((currArg == "--check" || currArg == "-c") && argc == 2)
         {
-            dr::GetSavedEvents();
+            dr::GetAllSavedEvents();
             dr::CheckEvents();
             return EXIT_SUCCESS;
         }
 
         else if (currArg == "-e" && argc == 3)
         {
-            dr::GetSavedEvents();
-            s[ dr::CheckEventNr(argv[i + 1]) ]->SetToEveryYearEvent();
+            dr::GetAllSavedEvents();
+            if (typeid(s[dr::CheckEventNr(argv[i + 1])]) == typeid(dr::Specified))
+            {
+                dr::Specified rem = s[dr::CheckEventNr(argv[i + 1])];
+            }
+            else
+
             dr::SaveAllEvents();
             return EXIT_SUCCESS;
         }
 
         else if (currArg == "-b" && argc == 3)
         {
-            dr::GetSavedEvents();
-            s[ dr::CheckEventNr(argv[i + 1]) ]->SetToRemBefore();
+            dr::GetAllSavedEvents();
+             if (typeid(s[dr::CheckEventNr(argv[i + 1])]) == typeid(dr::Specified))
+            {
+                dr::Specified rem = s[dr::CheckEventNr(argv[i + 1])];
+            }
+            else
+            
             dr::SaveAllEvents();
             return EXIT_SUCCESS;
         }
 
-        else if ((currArg == "--new" || currArg == "-n") && (argc >= 5 || argc <= 7))
+        else if ((currArg == "--new" || currArg == "-n") && argc == 4)
         {
-            s.push_back(new dr::Event(std::string(argv[i + 1]), argv[i + 2], argv[i + 3]));
+            dr::EveryDay rem(std::string(argv[i + 1]), argv[i + 2]);
 
-            if (argc > 5)
+            rem.Save();
+            std::cout << "Successfully created new reimnder.";
+            return EXIT_SUCCESS;
+        }
+
+        ///// TODO: fix (argc >= 5 || argc <= 7) -> takes every value
+        else if ((currArg == "--new" || currArg == "-n") && (argc >= 5 && argc <= 7))
+        {
+
+
+            if (argc == 5 && dr::Weekly::CheckIfWDay(argv[i + 1]))
             {
-                for (int j = 1; j < argc; j++)
+                dr::Weekly rem(std::string(argv[i + 1]), argv[i + 2], argv[i + 3]);
+                rem.Save();
+            }
+            else
+            {
+                dr::Specified rem(std::string(argv[i + 1]), argv[i + 2], argv[i + 3]);
+
+                if (argc > 5)
                 {
-                    if (std::string(argv[j]) == "-e") s.back()->SetToEveryYearEvent();
-                    else if (std::string(argv[j]) == "-b") s.back()->SetToRemBefore();
-                    else if (!(argv[j] == argv[i] || argv[j] == argv[i + 1] || argv[j] == argv[i + 2] || argv[j] == argv[i + 3])) dr::ArgErr();
+                    for (int j = 1; j < argc; j++)
+                    {
+                        if (std::string(argv[j]) == "-e") rem.SetEveryYearEvent();
+                        else if (std::string(argv[j]) == "-b") rem.SetRemBefore();
+                        else if (!(argv[j] == argv[i] || argv[j] == argv[i + 1] || argv[j] == argv[i + 2] || argv[j] == argv[i + 3])) dr::ArgErr();
+                    }
                 }
+                rem.Save();
             }
 
-            s.back()->Save();
             std::cout << "Successfully created new reimnder.";
             return EXIT_SUCCESS;
         }
 
         else if (currArg == "--delete" && argc == 3)
         {
-            dr::GetSavedEvents();
+            dr::GetAllSavedEvents();
             dr::DeleteEvent( dr::CheckEventNr(argv[i + 1]) );
             dr::SaveAllEvents();
             return EXIT_SUCCESS;
@@ -119,8 +144,8 @@ int main(int argc, char *argv[])
 
         else if ((currArg == "--delete-outdated" || currArg == "-o") && argc == 2)
         {
-            dr::GetSavedEvents();
-            dr::DeleteOutOfDate();
+            dr::Specified::GetSavedEvents();
+            dr::Specified::DeleteOutOfDate();
             dr::SaveAllEvents();
             return EXIT_SUCCESS;
         }

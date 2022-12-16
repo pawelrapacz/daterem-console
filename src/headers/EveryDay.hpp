@@ -41,5 +41,7 @@ namespace daterem
         std::string GetData() const override;
         void Save() const override;
         void Check() const override;
+
+        static void GetSavedEvents();
     };    
 }

@@ -44,10 +44,7 @@ namespace daterem
 
     public:
         inline static const std::filesystem::path DATA_FILE{std::filesystem::path(getenv("APPDATA")) / "daterem" / "Specified"};
-        /**
-         * ! insts desn't work -> no idea why
-        */
-        static std::vector < Specified* > insts; // table of pointers to all instances
+        inline static std::vector < Specified* > insts; // table of pointers to all class instances
 
     public:
         std::string GetData() const override;
@@ -60,6 +57,7 @@ namespace daterem
         void SetEveryYearEvent();
         void SetRemBefore();
 
+        static void GetSavedEvents();
         static void DeleteOutOfDate();
     };
 }

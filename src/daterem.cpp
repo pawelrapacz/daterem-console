@@ -103,68 +103,11 @@ void dr::DeleteEvent(unsigned short n) {
 
 
 
-void dr::GetSavedEvents()
+void dr::GetAllSavedEvents()
 {
-    std::fstream file;
-    std::string line;
-    int numOfLines{};
-    {
-        file.open(EveryDay::DATA_FILE, std::ios::in);
-        if (!file.good())
-        {
-            SetConsoleTextAttribute(hOut, 12);
-            std::clog << "Error! Cannot open the data file, create a new reminder first." << std::endl;
-            SetConsoleTextAttribute(hOut, 7);
-            exit(EXIT_FAILURE);
-        }
-
-        while (getline(file, line))
-            if (!line.empty()) numOfLines++;
-        
-        file.close();
-        for (int i = 0; i < (numOfLines / 7); i++)
-            s.push_back(new EveryDay);
-        
-        numOfLines = 0;
-    }
-    {
-        file.open(Weekly::DATA_FILE, std::ios::in);
-        if (!file.good())
-        {
-            SetConsoleTextAttribute(hOut, 12);
-            std::clog << "Error! Cannot open the data file, create a new reminder first." << std::endl;
-            SetConsoleTextAttribute(hOut, 7);
-            exit(EXIT_FAILURE);
-        }
-
-        while (getline(file, line))
-            if (!line.empty()) numOfLines++;
-        
-        file.close();
-        for (int i = 0; i < (numOfLines / 7); i++)
-            s.push_back(new Weekly);
-        
-        numOfLines = 0;
-    }
-    {
-        file.open(Specified::DATA_FILE, std::ios::in);
-        if (!file.good())
-        {
-            SetConsoleTextAttribute(hOut, 12);
-            std::clog << "Error! Cannot open the data file, create a new reminder first." << std::endl;
-            SetConsoleTextAttribute(hOut, 7);
-            exit(EXIT_FAILURE);
-        }
-
-        while (getline(file, line))
-            if (!line.empty()) numOfLines++;
-        
-        file.close();
-        for (int i = 0; i < (numOfLines / 7); i++)
-            s.push_back(new Specified);
-        
-        numOfLines = 0;
-    }
+    EveryDay::GetSavedEvents();
+    Weekly::GetSavedEvents();
+    Specified::GetSavedEvents();
 }
 
 
