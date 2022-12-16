@@ -44,7 +44,7 @@ daterem::Weekly::Weekly()
 }
 
 
-daterem::Weekly::Weekly(std::string d, std::string t, std::string des) :Event(t, des)
+daterem::Weekly::Weekly(std::string d, std::string t, std::string des) : Event(t, des)
 {
     bool exitStat = false;
     std::string con;

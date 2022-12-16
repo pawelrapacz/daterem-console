@@ -76,9 +76,10 @@ void dr::DeleteEvent(unsigned short n) {
 
 void dr::GetAllSavedEvents()
 {
-    EveryDay::GetSavedEvents();
-    Weekly::GetSavedEvents();
+    // ! THIS ORDER IS IMPORTANT
     Specified::GetSavedEvents();
+    Weekly::GetSavedEvents();
+    EveryDay::GetSavedEvents();
 }
 
 

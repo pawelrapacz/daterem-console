@@ -46,10 +46,11 @@ daterem::Specified::Specified()
     file.close();
     DefineRemBeforeDate();
     objCount++;
+    insts.push_back(this);
 }
 
 
-daterem::Specified::Specified(std::string d, std::string t, std::string des) :Event(t, des)
+daterem::Specified::Specified(std::string d, std::string t, std::string des) : Event(t, des)
 {
     bool exitStat = false;
     std::string con;
@@ -273,7 +274,7 @@ void daterem::Specified::DefineRemBeforeDate()
 }
 
 
-bool daterem::Specified::CheckOutOfDate()
+bool daterem::Specified::CheckOutOfDate() const
 {
     bool outDated = false;
 
@@ -346,9 +347,6 @@ void daterem::Specified::DeleteOutOfDate()
     for (int i = 0; i < Event::objCount; i++)
         if (insts[i]->CheckOutOfDate()) iter.push_back(i);
     
-    /**
-     * ! DeleteEvent() deletes wrong/random Events
-    */
 
     for (int i = 0; i < iter.size(); i++)
         daterem::DeleteEvent(iter[i] - i);

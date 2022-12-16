@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
         std::string currArg = argv[i];
         if ((currArg == "--help" || currArg == "-h") && argc == 2)
         {
-            dr::ShowHelp(argv[0]);
+            dr::ShowHelp( argv[0] );
             return EXIT_SUCCESS;
         }
 
@@ -72,12 +72,14 @@ int main(int argc, char *argv[])
 
         else if (currArg == "-e" && argc == 3)
         {
-            dr::GetAllSavedEvents();
-            if (typeid(s[dr::CheckEventNr(argv[i + 1])]) == typeid(dr::Specified))
+            dr::Specified::GetSavedEvents();
+
+            int eventNumber = dr::CheckEventNr( argv[i + 1] );
+            if (typeid( s[eventNumber] ) == typeid(dr::Specified))
             {
-                dr::Specified rem = s[dr::CheckEventNr(argv[i + 1])];
+                dr::Specified::insts[eventNumber]->SetEveryYearEvent();
             }
-            else
+            else Log.print(L_ERROR, "Ony reminders with specified date can be modified with this option");
 
             dr::SaveAllEvents();
             return EXIT_SUCCESS;
@@ -85,13 +87,15 @@ int main(int argc, char *argv[])
 
         else if (currArg == "-b" && argc == 3)
         {
-            dr::GetAllSavedEvents();
-             if (typeid(s[dr::CheckEventNr(argv[i + 1])]) == typeid(dr::Specified))
+            dr::Specified::GetSavedEvents();
+
+            int eventNumber = dr::CheckEventNr( argv[i + 1] );
+            if (typeid( s[eventNumber] ) == typeid(dr::Specified))
             {
-                dr::Specified rem = s[dr::CheckEventNr(argv[i + 1])];
+                dr::Specified::insts[eventNumber]->SetRemBefore();
             }
-            else
-            
+            else Log.print(L_ERROR, "Ony reminders with specified date can be modified with this option");
+
             dr::SaveAllEvents();
             return EXIT_SUCCESS;
         }
@@ -105,7 +109,6 @@ int main(int argc, char *argv[])
             return EXIT_SUCCESS;
         }
 
-        ///// TODO: fix (argc >= 5 || argc <= 7) -> takes every value
         else if ((currArg == "--new" || currArg == "-n") && (argc >= 5 && argc <= 7))
         {
 

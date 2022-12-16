@@ -26,9 +26,6 @@ namespace daterem
 {
     class EveryDay : public Event
     {
-    private:
-        /* data */
-
     public:
         EveryDay();
         EveryDay(std::string, std::string);

@@ -37,6 +37,11 @@ namespace daterem
         bool m_EveryYearEvent;
         bool m_RemBefore;
 
+    private:
+        void DefineRemBeforeDate();
+        std::string GetFormatedDate() const;
+        bool CheckOutOfDate() const;
+
     public:
         Specified();
         Specified(std::string, std::string, std::string);
@@ -51,9 +56,6 @@ namespace daterem
         void Save() const override;
         void Check() const override;
 
-        std::string GetFormatedDate() const;
-        bool CheckOutOfDate();
-        void DefineRemBeforeDate();
         void SetEveryYearEvent();
         void SetRemBefore();
 

@@ -44,7 +44,7 @@ daterem::EveryDay::EveryDay()
 }
 
 
-daterem::EveryDay::EveryDay(std::string t, std::string des) :Event(t, des)
+daterem::EveryDay::EveryDay(std::string t, std::string des) : Event(t, des)
 {
     objCount++;
 }
