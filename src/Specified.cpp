@@ -114,6 +114,23 @@ std::string daterem::Specified::GetData() const
 
 void daterem::Specified::Save() const
 {
+    file.open(DATA_FILE, std::ios::out | std::ios::app);
+    if (!file.good()){
+        file.close();
+        AppDataCheckMeta();
+        Save();
+    }
+    else
+    {
+        file << m_Day;
+        file << '\n' << m_Month;
+        file << '\n' << m_Year;
+        file << '\n' << m_Title;
+        file << '\n' << m_Description;
+        file << '\n' << m_EveryYearEvent;
+        file << '\n' << m_RemBefore << '\n';
+        file.close();
+    }
 }
 
 
