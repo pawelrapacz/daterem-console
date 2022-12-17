@@ -58,7 +58,7 @@ daterem::Weekly::Weekly(std::string d, std::string t, std::string des) : Event(t
     else m_wDay = (wDay)std::stoi(d);
 
     if (exitStat) print(L_ERROR, "Wrong date format");
-
+    
     objCount++;
 }
 
@@ -138,6 +138,4 @@ void daterem::Weekly::GetSavedEvents()
     file.close();
     for (unsigned int i = 0; i < (numOfLines / LINES_PER_OBJ); i++)
         s.push_back(new Weekly);
-    
-    numOfLines = 0;
 }

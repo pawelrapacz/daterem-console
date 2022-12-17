@@ -47,8 +47,8 @@ daterem::Specified::Specified()
     }
     file.close();
     DefineRemBeforeDate();
-    objCount++;
     insts.push_back(this);
+    objCount++;
 }
 
 
@@ -353,8 +353,6 @@ void daterem::Specified::GetSavedEvents()
     file.close();
     for (unsigned int i = 0; i < (numOfLines / LINES_PER_OBJ); i++)
         s.push_back(new Specified);
-    
-    numOfLines = 0;
 }
 
 

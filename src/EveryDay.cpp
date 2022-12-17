@@ -106,6 +106,4 @@ void daterem::EveryDay::GetSavedEvents()
     file.close();
     for (unsigned int i = 0; i < (numOfLines / LINES_PER_OBJ); i++)
         s.push_back(new EveryDay);
-    
-    numOfLines = 0;
 }
