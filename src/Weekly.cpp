@@ -46,16 +46,12 @@ daterem::Weekly::Weekly()
 }
 
 
-daterem::Weekly::Weekly(std::string d, std::string t, std::string des) : Event(t, des)
+daterem::Weekly::Weekly(const char* d, std::string t, std::string des) : Event(t, des)
 {
     bool exitStat = false;
-    std::string con;
     
-    for (char i : d)
-        if (!isdigit(i)) exitStat = true;
-
-    if (std::stoi(d) > 6) exitStat = true;
-    else m_wDay = (wDay)std::stoi(d);
+    if (!isdigit(d[0]) || atoi(d) > 6) exitStat = true;
+    else m_wDay = (wDay)atoi(d);
 
     if (exitStat) print(L_ERROR, "Wrong date format");
     
@@ -74,6 +70,16 @@ daterem::Weekly::~Weekly()
 
 std::string daterem::Weekly::GetData() const
 {
+    static const std::string days[]
+    {
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednsday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+    };
     return " - "  + days[m_wDay] + " - " + m_Title + " - " + m_Description + '\n';
 }
 
@@ -104,9 +110,6 @@ void daterem::Weekly::Check() const
 
     if (checked)
     {
-        /**
-         * TODO: Better way to handle anyEvent \/
-        */
         Event::anyEvent = true;
         std::cout << m_Title << " " << m_Description << std::endl;
     }
@@ -114,15 +117,6 @@ void daterem::Weekly::Check() const
 
 
 
-
-
-bool daterem::Weekly::CheckIfWDay(std::string str)
-{
-    for (std::string i : days)
-        if (i == str) return true;
-
-    return false;
-}
 
 
 void daterem::Weekly::GetSavedEvents()

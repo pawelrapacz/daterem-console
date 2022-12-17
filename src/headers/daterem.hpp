@@ -36,7 +36,7 @@ namespace daterem
     void ListAllEvents();
     void DeleteEvent(unsigned short);
     unsigned short CheckEventNr(std::string);
-    void ShowHelp(char*);
+    void ShowHelp(const char*);
     void CheckEvents();
     std::string GetLocalDate();
     void AppDataCheckMeta(); // Checks whether users data exists, if not creates it

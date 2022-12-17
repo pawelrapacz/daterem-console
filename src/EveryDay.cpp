@@ -86,6 +86,7 @@ void daterem::EveryDay::Save() const
 
 void daterem::EveryDay::Check() const
 {
+    Event::anyEvent = true;
     std::cout << m_Title << " " << m_Description << std::endl;
 }
 

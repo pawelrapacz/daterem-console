@@ -11,7 +11,7 @@ const tm *ltm = localtime(&now);
 extern std::vector < daterem::Event* > s;
 
 
-void dr::ShowHelp(char* programArg)
+void dr::ShowHelp(const char* programArg)
 {
     const auto helpPath{fs::absolute(programArg).parent_path() / "help.txt"};
     std::string line;

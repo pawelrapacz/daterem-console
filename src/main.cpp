@@ -21,6 +21,7 @@
 #include <vector>
 #include <typeinfo>
 #include <windows.h>
+#include <cstring>
 #include "headers/daterem.hpp"
 #include "headers/Log.hpp"
 
@@ -28,7 +29,7 @@ namespace dr = daterem;
 
 std::vector < dr::Event* > s;
 
-int main(int argc, char *argv[])
+int main(const int argc, const char* argv[])
 {
     SetConsoleCP( 65001 );
     SetConsoleOutputCP( 65001 );
@@ -41,9 +42,10 @@ int main(int argc, char *argv[])
         return EXIT_SUCCESS;
     }
 
+    std::string currArg;
     for (int i = 1; i < argc; i++)
     {
-        std::string currArg = argv[i];
+        currArg = argv[i];
         if ((currArg == "--help" || currArg == "-h") && argc == 2)
         {
             dr::ShowHelp( argv[0] );
@@ -63,7 +65,7 @@ int main(int argc, char *argv[])
             return EXIT_SUCCESS;
         }
 
-        else if ((currArg == "--check" || currArg == "-c") && argc == 2)
+        else if (((currArg == "--check" || currArg == "-c") && argc == 2) || argc == 1)
         {
             dr::GetAllSavedEvents();
             dr::CheckEvents();
@@ -102,8 +104,7 @@ int main(int argc, char *argv[])
 
         else if ((currArg == "--new" || currArg == "-n") && argc == 4)
         {
-            dr::EveryDay rem(std::string(argv[i + 1]), argv[i + 2]);
-
+            dr::EveryDay rem(argv[i + 1], argv[i + 2]);
             rem.Save();
             print(L_NONE, "Successfully created new reimnder");
             return EXIT_SUCCESS;
@@ -111,23 +112,21 @@ int main(int argc, char *argv[])
 
         else if ((currArg == "--new" || currArg == "-n") && (argc >= 5 && argc <= 7))
         {
-
-
-            if (argc == 5 && dr::Weekly::CheckIfWDay(argv[i + 1]))
+            if (argc == 5 && strlen(argv[i + 1]) == 1)
             {
-                dr::Weekly rem(std::string(argv[i + 1]), argv[i + 2], argv[i + 3]);
+                dr::Weekly rem(argv[2], argv[i + 2], argv[i + 3]);
                 rem.Save();
             }
             else
             {
-                dr::Specified rem(std::string(argv[i + 1]), argv[i + 2], argv[i + 3]);
+                dr::Specified rem(argv[i + 1], argv[i + 2], argv[i + 3]);
 
                 if (argc > 5)
                 {
                     for (int j = 1; j < argc; j++)
                     {
-                        if (std::string(argv[j]) == "-e") rem.SetEveryYearEvent();
-                        else if (std::string(argv[j]) == "-b") rem.SetRemBefore();
+                        if (strcmp(argv[j], "-e") == 0) rem.SetEveryYearEvent();
+                        else if (strcmp(argv[j], "-b") == 0) rem.SetRemBefore();
                         else if (!(argv[j] == argv[i] || argv[j] == argv[i + 1] || argv[j] == argv[i + 2] || argv[j] == argv[i + 3]))
                             print(L_ERROR, "Incorrect syntax\nTry \'daterem --help\' for more information.");
                     }
@@ -159,10 +158,10 @@ int main(int argc, char *argv[])
         argc > 5 && 
         (currArg == "-e" || currArg == "-b") &&
         (
-            std::string(argv[i + 1]) == "--new" ||
-            std::string(argv[i + 2]) == "--new" ||
-            std::string(argv[i + 1]) == "-n" ||
-            std::string(argv[i + 2]) == "-n"
+            strcmp(argv[i + 1], "--new") == 0 ||
+            strcmp(argv[i + 2], "--new") == 0 ||
+            strcmp(argv[i + 1], "-n") == 0 ||
+            strcmp(argv[i + 2], "-n") == 0
         ))) 
             print(L_ERROR, "Incorrect syntax\nTry \'daterem --help\' for more information.");
     }
