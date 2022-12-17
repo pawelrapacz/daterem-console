@@ -28,7 +28,7 @@ void dr::ShowHelp(char* programArg)
 
 void dr::ListAllEvents() {
     for (int i = 0; i < Event::objCount; i++) {
-        std::cout << i << s[i]->GetData();
+        std::cout << i + 1 << s[i]->GetData();
     }
 }
 
@@ -79,6 +79,7 @@ void dr::DeleteEvent(unsigned short n) {
 
 void dr::GetAllSavedEvents()
 {
+    AppDataCheckMeta();
     // ! THIS ORDER IS IMPORTANT
     Specified::GetSavedEvents();
     Weekly::GetSavedEvents();
@@ -121,24 +122,18 @@ std::string dr::GetLocalDate()
 
 void dr::AppDataCheckMeta()
 {
-    if (!fs::is_directory(EveryDay::DATA_FILE.parent_path()) || !fs::is_regular_file(EveryDay::DATA_FILE))
+    if (!fs::is_directory(EveryDay::DATA_FILE.parent_path()))
     {
         fs::remove_all(EveryDay::DATA_FILE.parent_path());
         fs::create_directory(EveryDay::DATA_FILE.parent_path());
+    }
+
+    if (!fs::is_regular_file(EveryDay::DATA_FILE))
         std::ofstream(EveryDay::DATA_FILE).write(0, 0);
-    }
 
-    if (!fs::is_directory(Weekly::DATA_FILE.parent_path()) || !fs::is_regular_file(Weekly::DATA_FILE))
-    {
-        fs::remove_all(Weekly::DATA_FILE.parent_path());
-        fs::create_directory(Weekly::DATA_FILE.parent_path());
+    if (!fs::is_regular_file(Weekly::DATA_FILE))
         std::ofstream(Weekly::DATA_FILE).write(0, 0);
-    }
 
-    if (!fs::is_directory(Specified::DATA_FILE.parent_path()) || !fs::is_regular_file(Specified::DATA_FILE))
-    {
-        fs::remove_all(Specified::DATA_FILE.parent_path());
-        fs::create_directory(Specified::DATA_FILE.parent_path());
+    if (!fs::is_regular_file(Specified::DATA_FILE))
         std::ofstream(Specified::DATA_FILE).write(0, 0);
-    }
 }

@@ -31,7 +31,7 @@ daterem::Weekly::Weekly()
     file.open(DATA_FILE, std::ios::in);
     if (!file.good()) print(L_ERROR, "Cannot open the data file, create a new reminder first");
 
-    short lineNum = objCount * 3 + 1; // information on wich line the object data starts (every object takes 3 lines)
+    short lineNum = objCount * LINES_PER_OBJ + 1; // information on wich line the object data starts (every object takes 3 lines)
     short actualLine = 1;
     std::string line;
     while(getline(file, line))
