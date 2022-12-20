@@ -313,8 +313,10 @@ bool daterem::Specified::CheckOutOfDate() const
 std::string daterem::Specified::GetFormatedDate() const
 {
     std::string date;
+    if (m_RemBefore) date += "*";
+
     if (m_Day <= 9) date = "0" + std::to_string(m_Day) + ".";
-    else date= std::to_string(m_Day) + ".";
+    else date += std::to_string(m_Day) + ".";
 
     if (m_Month <= 9) date += "0" + std::to_string(m_Month);
     else date += std::to_string(m_Month);
