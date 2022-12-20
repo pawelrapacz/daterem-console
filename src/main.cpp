@@ -21,6 +21,7 @@
 #include <vector>
 #include <windows.h>
 #include <cstring>
+
 #include "headers/daterem.hpp"
 #include "headers/Log.hpp"
 
@@ -53,7 +54,11 @@ int main(const int argc, const char* argv[])
 
         else if ((currArg == "--version" || currArg == "-v") && argc == 2)
         {
-            print(L_NONE, "daterem 2.0.0\nCopyright (C) 2022 Paweł Rapacz\nThis program comes with ABSOLUTELY NO WARRANTY;\nThis is free software, and you are welcome to redistribute it under certain conditions.");
+            print(L_NONE, 
+R"(daterem 2.0.0
+Copyright (C) 2022 Paweł Rapacz
+This program comes with ABSOLUTELY NO WARRANTY;
+This is free software, and you are welcome to redistribute it under certain conditions.)");
             return EXIT_SUCCESS;
         }
 
@@ -77,6 +82,7 @@ int main(const int argc, const char* argv[])
             dr::Specified::GetSavedEvents();
             dr::Specified::insts[dr::CheckEventNr(argv[i + 1])]->SetEveryYearEvent();
             dr::Specified::SaveEvents();
+            print(L_NONE, "Successfully changed reimnder");
             return EXIT_SUCCESS;
         }
 
@@ -86,6 +92,7 @@ int main(const int argc, const char* argv[])
             dr::Specified::GetSavedEvents();
             dr::Specified::insts[dr::CheckEventNr(argv[i + 1])]->SetRemBefore();
             dr::Specified::SaveEvents();
+            print(L_NONE, "Successfully changed reimnder");
             return EXIT_SUCCESS;
         }
 
