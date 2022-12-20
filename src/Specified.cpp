@@ -18,7 +18,9 @@
 */
 
 #include <iostream>
+#include <iomanip>
 #include <string>
+#include <sstream>
 
 #include "headers/daterem.hpp"
 #include "headers/Log.hpp"
@@ -108,9 +110,11 @@ daterem::Specified::~Specified()
 
 std::string daterem::Specified::GetData() const
 {
-    return " - " + GetFormatedDate() + " - " + m_Title + " - " + m_Description + '\n';
+    std::ostringstream oss;
+    oss << std::left << std::setw(15) << std::setfill(' ') << GetFormatedDate()
+    << std::setw(25) << m_Title << m_Description << std::endl;
+    return oss.str();
 }
-
 
 void daterem::Specified::Save() const
 {
@@ -173,13 +177,14 @@ void daterem::Specified::Check() const
     if (today)
     {
         Event::anyEvent = true;
-        std::cout << m_Title << " " << m_Description << std::endl;
+        std::cout << std::left << std::setw(25) << std::setfill(' ') << m_Title << m_Description << std::endl;
     }
 
     if (before)
     {
         Event::anyEvent = true;
-        std::cout << "In day "+ GetFormatedDate() + " " + m_Title + " - " + m_Description + " is scheduled" << std::endl;
+        std::cout << std::left << std::setw(25) << std::setfill(' ') << m_Title << m_Description 
+        << " is scheduled for " << GetFormatedDate().erase(0, 1) << std::endl;
     }
 }
 

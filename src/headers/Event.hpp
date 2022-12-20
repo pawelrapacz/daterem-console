@@ -22,7 +22,6 @@
 #include <string>
 #include <fstream>
 #include <filesystem>
-#include <typeinfo>
 
 namespace daterem
 {

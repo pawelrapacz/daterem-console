@@ -1,4 +1,7 @@
+#include <iostream>
+#include <iomanip>
 #include <filesystem>
+
 #include "headers/daterem.hpp"
 #include "headers/Log.hpp"
 
@@ -27,8 +30,21 @@ void dr::ShowHelp(const char* programArg)
 
 
 void dr::ListAllEvents() {
+    if (Event::objCount == 0)
+    {
+        print(L_INFO, "No reminders scheduled yet");
+        return;
+    }
+
+    // list header
+    std::cout << std::left << std::setw(5) << std::setfill(' ') << "No.";
+    std::cout << std::left << std::setw(15) << std::setfill(' ') << "Date";
+    std::cout << std::left << std::setw(25) << std::setfill(' ') << "Title";
+    std::cout << std::left << "Description\n\n";
+
+    // list content
     for (int i = 0; i < Event::objCount; i++) {
-        std::cout << i + 1 << s[i]->GetData();
+        std::cout << std::left << std::setw(5) << i + 1 << s[i]->GetData();
     }
 }
 
@@ -79,7 +95,6 @@ void dr::DeleteEvent(unsigned short n) {
 
 void dr::GetAllSavedEvents()
 {
-    AppDataCheckMeta();
     // ! THIS ORDER IS IMPORTANT
     Specified::GetSavedEvents();
     Weekly::GetSavedEvents();
@@ -93,7 +108,6 @@ void dr::CheckEvents()
     std::cout << "[" << GetLocalDate() << "]" << "\n\n";
     for (int i = 0; i < Event::objCount; i++)
         s[i]->Check();
-
 
     if (!Event::anyEvent) std::cout << "No reminders scheduled for today";
 }

@@ -17,8 +17,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <string>
 #include <iostream>
+#include <iomanip>
+#include <string>
+#include <sstream>
 
 #include "headers/daterem.hpp"
 #include "headers/Log.hpp"
@@ -63,7 +65,10 @@ daterem::EveryDay::~EveryDay()
 
 std::string daterem::EveryDay::GetData() const
 {
-    return " - Everyday - " + m_Title + " - " + m_Description + '\n';
+    std::ostringstream oss;
+    oss << std::left << std::setw(15) << std::setfill(' ') << "Everyday";
+    oss << std::setw(25) << m_Title << m_Description << std::endl;
+    return oss.str();
 }
 
 
@@ -87,7 +92,7 @@ void daterem::EveryDay::Save() const
 void daterem::EveryDay::Check() const
 {
     Event::anyEvent = true;
-    std::cout << m_Title << " " << m_Description << std::endl;
+    std::cout << std::left << std::setw(25) << std::setfill(' ') << m_Title << m_Description << std::endl;
 }
 
 
