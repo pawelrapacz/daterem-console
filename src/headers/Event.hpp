@@ -31,7 +31,7 @@ namespace daterem
     protected:
         inline static std::fstream file;
         
-        std::string m_Title;
+        std::string m_Title; // max 20 characters
         std::string m_Description;
         Event();
         Event(std::string, std::string);
