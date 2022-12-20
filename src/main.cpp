@@ -142,9 +142,10 @@ This is free software, and you are welcome to redistribute it under certain cond
 
         else if ((currArg == "--delete-outdated" || currArg == "-o") && argc == 2)
         {
+            // Loading only specified events
             dr::Specified::GetSavedEvents();
             dr::Specified::DeleteOutOfDate();
-            dr::SaveAllEvents();
+            dr::Specified::SaveEvents();
             return EXIT_SUCCESS;
         }
 

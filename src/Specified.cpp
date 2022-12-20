@@ -122,8 +122,7 @@ void daterem::Specified::Save() const
     file.open(DATA_FILE, std::ios::out | std::ios::app);
     if (!file.good()){
         file.close();
-        AppDataCheckMeta();
-        Save();
+        print(L_ERROR, "Can not save, file inaccesible");
     }
     else
     {
@@ -321,7 +320,7 @@ std::string daterem::Specified::GetFormatedDate() const
     std::string date;
     if (m_RemBefore) date += "*";
 
-    if (m_Day <= 9) date = "0" + std::to_string(m_Day) + ".";
+    if (m_Day <= 9) date += "0" + std::to_string(m_Day) + ".";
     else date += std::to_string(m_Day) + ".";
 
     if (m_Month <= 9) date += "0" + std::to_string(m_Month);

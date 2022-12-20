@@ -96,8 +96,7 @@ void daterem::Weekly::Save() const
     file.open(DATA_FILE, std::ios::out | std::ios::app);
     if (!file.good()){
         file.close();
-        AppDataCheckMeta();
-        Save();
+        print(L_ERROR, "Can not save, file inaccesible");
     }
     else
     {

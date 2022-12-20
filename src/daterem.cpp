@@ -57,14 +57,18 @@ void dr::ListAllEvents() {
     }
 
     // list header
-    std::cout << std::left << std::setw(5) << std::setfill(' ') << "No.";
+    std::cout << std::left << std::setw(6) << std::setfill(' ') << "No.";
     std::cout << std::left << std::setw(15) << std::setfill(' ') << "Date";
     std::cout << std::left << std::setw(25) << std::setfill(' ') << "Title";
     std::cout << std::left << "Description\n\n";
 
     // list content
+    unsigned int number = 1;
     for (Event* i : s)
-        std::cout << std::left << std::setw(5) << i + 1 << i->GetData();
+    {
+        std::cout << std::left << std::setw(6) << number << i->GetData();
+        number++;
+    }
 }
 
 
@@ -88,15 +92,15 @@ void dr::SaveAllEvents()
     AppDataCheckMeta();
     std::fstream file;
     file.open(EveryDay::DATA_FILE, std::ios::out | std::ios::trunc);
-    if (!file.good()) print(L_ERROR, "Data file not found");
+    if (!file.good()) print(L_ERROR, "Can not save, file inaccesible");
     file.close();
 
     file.open(Weekly::DATA_FILE, std::ios::out | std::ios::trunc);
-    if (!file.good()) print(L_ERROR, "Data file not found");
+    if (!file.good()) print(L_ERROR, "Can not save, file inaccesible");
     file.close();
 
     file.open(Specified::DATA_FILE, std::ios::out | std::ios::trunc);
-    if (!file.good()) print(L_ERROR, "Data file not found");
+    if (!file.good()) print(L_ERROR, "Can not save, file inaccesible");
     file.close();
 
     for (Event* i : s)
@@ -114,6 +118,7 @@ void dr::DeleteEvent(unsigned int n) {
 
 void dr::GetAllSavedEvents()
 {
+    AppDataCheckMeta();
     // ! ORDER IS IMPORTANT
     Specified::GetSavedEvents();
     Weekly::GetSavedEvents();
