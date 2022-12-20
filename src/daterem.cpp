@@ -43,9 +43,8 @@ void dr::ListAllEvents() {
     std::cout << std::left << "Description\n\n";
 
     // list content
-    for (int i = 0; i < Event::objCount; i++) {
-        std::cout << std::left << std::setw(5) << i + 1 << s[i]->GetData();
-    }
+    for (Event* i : s)
+        std::cout << std::left << std::setw(5) << i + 1 << i->GetData();
 }
 
 
@@ -80,13 +79,13 @@ void dr::SaveAllEvents()
     if (!file.good()) print(L_ERROR, "Data file not found");
     file.close();
 
-    for (int i = 0; i < Event::objCount; i++)
-        s[i]->Save();
+    for (Event* i : s)
+        i->Save();
 }
 
 
 
-void dr::DeleteEvent(unsigned short n) {
+void dr::DeleteEvent(unsigned int n) {
     delete s[n];
     s.erase(s.begin() + n);
 }
@@ -95,7 +94,7 @@ void dr::DeleteEvent(unsigned short n) {
 
 void dr::GetAllSavedEvents()
 {
-    // ! THIS ORDER IS IMPORTANT
+    // ! ORDER IS IMPORTANT
     Specified::GetSavedEvents();
     Weekly::GetSavedEvents();
     EveryDay::GetSavedEvents();
@@ -106,8 +105,8 @@ void dr::GetAllSavedEvents()
 void dr::CheckEvents()
 {
     std::cout << "[" << GetLocalDate() << "]" << "\n\n";
-    for (int i = 0; i < Event::objCount; i++)
-        s[i]->Check();
+    for (Event* i : s)
+        i->Check();
 
     if (!Event::anyEvent) std::cout << "No reminders scheduled for today";
 }

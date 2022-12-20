@@ -50,7 +50,7 @@ namespace daterem
     public:
         inline static unsigned int objCount{};
         inline static const std::filesystem::path DATA_FILE{std::filesystem::path(getenv("APPDATA")) / "daterem" / "Specified"};
-        inline static const unsigned short LINES_PER_OBJ{7};
+        inline static const unsigned short LINES_PER_OBJ = 7;
         inline static std::vector < Specified* > insts; // table of pointers to all class instances
 
     public:

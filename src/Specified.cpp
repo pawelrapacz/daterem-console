@@ -369,23 +369,25 @@ void daterem::Specified::SaveEvents()
     if (!file.good()) print(L_ERROR, "Data file not found");
     file.close();
 
-    for (int i = 0; i < Event::objCount; i++)
-        insts[i]->Save();
+   for (Specified* i : insts)
+        i->Save();
 }
 
 
 void daterem::Specified::DeleteOutOfDate()
 {
-    std::vector < unsigned short > iter;
+    std::vector < unsigned int > iter;
     iter.reserve(10);
 
-    for (int i = 0; i < Event::objCount; i++)
-        if (insts[i]->CheckOutOfDate()) iter.push_back(i);
+    for (unsigned int i = 0; i < objCount; i++)
+        if ( insts[i]->CheckOutOfDate() ) iter.push_back(i);
     
 
-    for (int i = 0; i < iter.size(); i++)
+    for (unsigned int i = 0; i < (unsigned int)iter.size(); i++)
+    {
         daterem::DeleteEvent(iter[i] - i);
-
+        insts.erase( insts.begin() + ( iter[i] - i ) );
+    }
 
     std::cout << "Deleted: " << iter.size() << " reminders";
     iter.clear();
