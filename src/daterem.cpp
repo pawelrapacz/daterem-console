@@ -34,14 +34,14 @@ void dr::ListAllEvents() {
 
 
 
-unsigned short dr::CheckEventNr(std::string num)
+unsigned int dr::CheckEventNr(std::string num)
 {
     for (char i : num)
         if (!isdigit(i)) print(L_ERROR, "Incorrect syntax\nTry \'daterem --help\' for more information.");
     
-    unsigned short n = stoi(num);
+    unsigned int n = stoi(num);
 
-    if (n > Event::objCount || n == 0) print(L_ERROR, "No such event");
+    if (n > Event::objCount || n == 0) print(L_ERROR, "No such event, or you can not use this option with this event.");
     
     return n - 1;
 }

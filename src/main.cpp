@@ -19,7 +19,6 @@
 
 
 #include <vector>
-#include <typeinfo>
 #include <windows.h>
 #include <cstring>
 #include "headers/daterem.hpp"
@@ -74,31 +73,19 @@ int main(const int argc, const char* argv[])
 
         else if (currArg == "-e" && argc == 3)
         {
+            // Loading only specified events
             dr::Specified::GetSavedEvents();
-
-            int eventNumber = dr::CheckEventNr( argv[i + 1] );
-            if (typeid( s[eventNumber] ) == typeid(dr::Specified))
-            {
-                dr::Specified::insts[eventNumber]->SetEveryYearEvent();
-            }
-            else print(L_ERROR, "Ony reminders with specified date can be modified with this option");
-
-            dr::SaveAllEvents();
+            dr::Specified::insts[dr::CheckEventNr(argv[i + 1])]->SetEveryYearEvent();
+            dr::Specified::SaveEvents();
             return EXIT_SUCCESS;
         }
 
         else if (currArg == "-b" && argc == 3)
         {
+            // Loading only specified events
             dr::Specified::GetSavedEvents();
-
-            int eventNumber = dr::CheckEventNr( argv[i + 1] );
-            if (typeid( s[eventNumber] ) == typeid(dr::Specified))
-            {
-                dr::Specified::insts[eventNumber]->SetRemBefore();
-            }
-            else print(L_ERROR, "Ony reminders with specified date can be modified with this option");
-
-            dr::SaveAllEvents();
+            dr::Specified::insts[dr::CheckEventNr(argv[i + 1])]->SetRemBefore();
+            dr::Specified::SaveEvents();
             return EXIT_SUCCESS;
         }
 

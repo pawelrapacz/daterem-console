@@ -63,5 +63,6 @@ namespace daterem
 
         static void GetSavedEvents();
         static void DeleteOutOfDate();
+        static void SaveEvents();
     };
 }

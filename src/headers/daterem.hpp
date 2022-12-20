@@ -35,7 +35,7 @@ namespace daterem
     void SaveAllEvents();
     void ListAllEvents();
     void DeleteEvent(unsigned short);
-    unsigned short CheckEventNr(std::string);
+    unsigned int CheckEventNr(std::string);
     void ShowHelp(const char*);
     void CheckEvents();
     std::string GetLocalDate();

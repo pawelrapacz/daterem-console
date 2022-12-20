@@ -356,6 +356,17 @@ void daterem::Specified::GetSavedEvents()
 }
 
 
+void daterem::Specified::SaveEvents()
+{
+    file.open(DATA_FILE, std::ios::out | std::ios::trunc);
+    if (!file.good()) print(L_ERROR, "Data file not found");
+    file.close();
+
+    for (int i = 0; i < Event::objCount; i++)
+        insts[i]->Save();
+}
+
+
 void daterem::Specified::DeleteOutOfDate()
 {
     std::vector < unsigned short > iter;
