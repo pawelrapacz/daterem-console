@@ -334,7 +334,7 @@ std::string daterem::Specified::GetFormatedDate() const
 
 void daterem::Specified::SetEveryYearEvent()
 {
-    m_EveryYearEvent = m_EveryYearEvent ? false : true;
+   m_EveryYearEvent = true;
 }
 
 
