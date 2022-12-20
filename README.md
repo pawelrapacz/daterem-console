@@ -47,15 +47,26 @@ After you have installed the program you can create your first reminder by using
 
 <pre><code>daterem --new 01.01 "some awesome title" "some awesome description"</code></pre>
 
-The command above creates new annual reminder for specified date, what is important both title and description need to be specified.
+The command above creates new annual reminder for specified date, what is important both title (max 20 characters) and description need to be specified.
 In case you want to create one time reminder you just specify the year e.g. `01.01.2022`.
+
+To create weekly reminder set number [0 - 6] according to day counting from Sunday:
+<pre><code>daterem --new 0 "some awesome title" "some awesome description"</code></pre>
+
+To create everyday reminder just dont set the date:
+<pre><code>daterem --new "some awesome title" "some awesome description"</code></pre>
+
 
 ### View existing reminders
 Now when you have your first reminder created you can see it by using `--list` option.
 <pre><code>daterem --list</code></pre>
 <pre>
-1 - 01.01 - some awesome title - some awesome description 
-2 - 01.01.2022 - some awesome title - some awesome description
+No.   Date           Title                    Description
+
+1     01.01          some awesome title       some awesome description
+2     01.01.2022     some awesome title       some awesome description
+3     Sunday         some awesome title       some awesome description
+4     Everyday       some awesome title       some awesome description
 </pre>
 
 ### Check reminders for today
@@ -64,17 +75,23 @@ To see reminedrs scheduled for today just use `daterem` or:
 <pre>
 [01.01.2022]
 
-some awesome title some awesome description
-some awesome title some awesome description
+some awesome title       some awesome description
+some awesome title       some awesome description
+some awesome title       some awesome description
+some awesome title       some awesome description
 </pre>
 
 ### Deleting reminders
 You can delete specified reminder by using:
 <pre><code>daterem --delete 1</code></pre>
-This commad deleted reminder that has number 1, now when you list our reminders you can see that the first one was deleted.
+This commad deleted reminder that has number 1, now when you list all reminders you can see that the first one was deleted.
 <pre>
-C:> daterem --list
-1 - 01.01.2022 - some awesome title - some awesome description
+$ daterem --list
+No.   Date           Title                    Description
+
+1     01.01.2022     some awesome title       some awesome description
+2     Sunday         some awesome title       some awesome description
+3     Everyday       some awesome title       some awesome description
 </pre>
 
 ### Outdated reminders
@@ -87,9 +104,19 @@ Deleted: 1 reminders
 Of course this option applies to one time reminders only.
 
 ### Additional reminders
-You can create reminders that will additionally remind you week and two days before specifed date. To create such one use `-b` option:
+You can create reminders that will additionally remind you week and two days before specifed date, when listing * indicates whether additional remindin is on. To create such one use `-b` option:
 <pre><code>daterem -b --new 01.01 "some awesome title" "some awesome description"</code></pre>
-Additional reminding can be added to existing reminders, just specify the number of the reminder:
+
+<pre>
+$ daterem --list
+No.   Date           Title                    Description
+
+1     *01.01         some awesome title       some awesome description
+2     Sunday         some awesome title       some awesome description
+3     Everyday       some awesome title       some awesome description
+</pre>
+
+Additional reminding can be added or deleted for existing reminders, just specify the number of the reminder:
 <pre><code>daterem -b 1</code></pre>
 
 
@@ -100,8 +127,13 @@ This option can also be used with `--new`, when used this way forces the reminde
 <pre><code>daterem -e --new 01.01.2022 "some awesome title" "some awesome description"</code></pre>
 Despite the year specified created reminder is annual. You can see it after using `--list` option.
 <pre>
-C:> daterem --list
-1 - 01.01 - some awesome title - some awesome description 
+$ daterem --list
+No.   Date           Title                    Description
+
+1     *01.01         some awesome title       some awesome description
+2     01.01          some awesome title       some awesome description
+3     Sunday         some awesome title       some awesome description
+4     Everyday       some awesome title       some awesome description 
 </pre>
 
 
@@ -112,12 +144,11 @@ Project is still in progress, I am adding new features frequently, if you have a
 ## Upcoming changes
 
 ### Things that need improvement:
-
+- `-e` option handling
 
 ### Upcoming features:
-- Weekly reminders
-- Every day reminders
 - Reminding on startup
+- Deletig multiple reminders
 
 
 

@@ -20,7 +20,7 @@ DESCRIPTION
         
         -n, --new [date] [title] [description]
             Creates new reminder for given date, date format: DD.MM for every year reminder and DD.MM.YYYY for sigle reminder.
-            To create weeakly reminder set date to number [0 - 6] days since Sunday.
+            To create weekly reminder set date to number [0 - 6] days since Sunday.
             When date not set creates everyday reminder.
 
         -e [number]
