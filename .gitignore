@@ -2,6 +2,7 @@
 public/
 test/
 build/
+release
 
 
 *.bat

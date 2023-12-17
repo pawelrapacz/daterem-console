@@ -32,7 +32,6 @@ I undertook this project mainly to inprove my coding skills, learn something new
 ## Features
 - Reminds you anything
 - Easy to use
-- Multiple reminding
 
 
 
@@ -53,7 +52,7 @@ In case you want to create one time reminder you just specify the year e.g. `01.
 To create weekly reminder set number [0 - 6] according to day counting from Sunday:
 <pre><code>daterem --new 0 "some awesome title" "some awesome description"</code></pre>
 
-To create everyday reminder just dont set the date:
+To create everyday reminder just don't set the date:
 <pre><code>daterem --new "some awesome title" "some awesome description"</code></pre>
 
 
@@ -104,7 +103,7 @@ Deleted: 1 reminders
 Of course this option applies to one time reminders only.
 
 ### Additional reminders
-You can create reminders that will additionally remind you week and two days before specifed date, when listing * indicates whether additional remindin is on. To create such one use `-b` option:
+You can create reminders that will additionally remind you week and two days before specifed date, when listing * indicates whether additional reminding is on. To create such reminder use `-b` option:
 <pre><code>daterem -b --new 01.01 "some awesome title" "some awesome description"</code></pre>
 
 <pre>
@@ -121,9 +120,9 @@ Additional reminding can be added or deleted for existing reminders, just specif
 
 
 ### Converting reminders
-Some day you might want to change one time reminder to annual one, then you can use `-e` option:
+Some day you might want to change one time reminder to an annual reminder, then you can use `-e` option:
 <pre><code>daterem -e 1</code></pre>
-This option can also be used with `--new`, when used this way forces the reminder to be annual:
+This option can also be used with `--new`, when used this way it forces the reminder to be annual:
 <pre><code>daterem -e --new 01.01.2022 "some awesome title" "some awesome description"</code></pre>
 Despite the year specified created reminder is annual. You can see it after using `--list` option.
 <pre>
@@ -148,12 +147,12 @@ Project is still in progress, I am adding new features frequently, if you have a
 
 ### Upcoming features:
 - Reminding on startup
-- Deletig multiple reminders
+- Deleting multiple reminders
 
 
 
 ## Contact
-Created by [@pawelrapacz](https://github.com/pawelrapacz/) - feel free to contact me!
+Created by [@pawelrapacz](https://github.com/pawelrapacz/)
 
 
 
