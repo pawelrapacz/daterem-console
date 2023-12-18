@@ -20,6 +20,7 @@
 
 #include <iostream>
 #include <iomanip>
+#include <string>
 #include <filesystem>
 
 #include "headers/daterem.hpp"
@@ -36,15 +37,51 @@ extern std::vector < daterem::Event* > s;
 
 void dr::ShowHelp(const char* programArg)
 {
-    const auto helpPath{fs::absolute(programArg).parent_path() / "help.txt"};
-    std::string line;
-    std::ifstream help(helpPath);
-    if (!help.good()) exit(EXIT_FAILURE);
+    const std::string HELP = 
+R"(daterem - create reminders
 
-    while(getline(help, line))
-        std::cout << line << std::endl;
+SYNOPSIS
+    daterem [OPTION] [PROPERTIES]
+
+DESCRIPTION
+    Mandatory arguments to long options are mandatory for short options too.
+
+    -h, --help
+        Prints help.
+
+    -v, --version
+        Prints version information.
+
+    -l, --list
+        List all scheduled reminders.
     
-    help.close();
+    -c, --check
+        Shows all reminders scheduled for the current day.
+    
+    -n, --new [date] [title] [description]
+        Creates new reminder for given date, date format: DD.MM for every year reminder and DD.MM.YYYY for sigle reminder.
+        To create weekly reminder set date to number [0 - 6] days since Sunday.
+        When date not set creates everyday reminder.
+
+    -e [number]
+        Only for one time reminders
+
+        Converts reminder with indicated number to be every year (use --list to see the numeration).
+        When used with -n or --new e.g. (-e --new ...) forces created reminder to be every year, if used like this do not set the number.
+
+    -b [number]
+        Only for annual or one time reminders
+
+        Sets two additional reminders 7 days and 2 days before specified date, if turned on turns off (use --list to see the numeration).
+        When used with -n or --new, e.g. (-b --new ...) do not set the number.
+
+    --delete [number]
+        Deletes reminder with indicated number (use --list to see the numeration).
+
+    -o, --delete-outdated
+        Deletes all reminders that expired, applies only to one time reminders.)";
+
+    std::cout << HELP;
 }
 
 

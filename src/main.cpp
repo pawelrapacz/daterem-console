@@ -55,7 +55,7 @@ int main(const int argc, const char* argv[])
         else if ((currArg == "--version" || currArg == "-v") && argc == 2)
         {
             print(L_NONE, 
-R"(daterem 2.0.0
+R"(daterem 2.0.1
 Copyright (C) 2022 Paweł Rapacz
 This program comes with ABSOLUTELY NO WARRANTY;
 This is free software, and you are welcome to redistribute it under certain conditions.)");
