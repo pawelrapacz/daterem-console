@@ -24,8 +24,8 @@
 #include <filesystem>
 #include <memory>
 
-#include "headers/daterem.hpp"
-#include "headers/Log.hpp"
+#include "daterem.hpp"
+#include "Log.hpp"
 
 namespace fs = std::filesystem;
 namespace dr = daterem;

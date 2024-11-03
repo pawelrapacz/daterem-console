@@ -18,28 +18,10 @@
 */
 
 
-#include <cstring>
+#pragma once
 
-#include "Event.hpp"
-#include "Log.hpp"
-
-
-daterem::Event::Event(const char* t, const char* d) : m_Title(t), m_Description(d)
-{
-    if (std::strlen(t) > 20)
-        print(L_ERROR, "The title can be max 20 characters");
-    objCount++;
-}
-
-daterem::Event::Event(std::string& t, std::string& d) : m_Title(t), m_Description(d)
-{
-    if (m_Title.length() > 20)
-        print(L_ERROR, "The title can be max 20 characters");
-    objCount++;
-}
-
-
-daterem::Event::~Event()
-{
-    objCount--;
-}
+#define DATEREM_VERSION                 "@PROJECT_VERSION@"
+#define DATEREM_VERSION_MAJOR           @PROJECT_VERSION_MAJOR@
+#define DATEREM_VERSION_MINOR           @PROJECT_VERSION_MINOR@
+#define DATEREM_VERSION_PATCH           @PROJECT_VERSION_PATCH@
+#define DATEREM_PUBLICATION_YEAR        @PROJECT_PUBLICATION_YEAR@

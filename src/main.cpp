@@ -23,8 +23,8 @@
 #include <cstring>
 #include <memory>
 
-#include "headers/daterem.hpp"
-#include "headers/Log.hpp"
+#include "daterem.hpp"
+#include "Log.hpp"
 
 namespace dr = daterem;
 

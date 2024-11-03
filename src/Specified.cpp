@@ -25,8 +25,8 @@
 #include <sstream>
 #include <memory>
 
-#include "headers/daterem.hpp"
-#include "headers/Log.hpp"
+#include "daterem.hpp"
+#include "Log.hpp"
 
 extern std::vector<std::unique_ptr<daterem::Event>> events;
 extern const time_t now;
