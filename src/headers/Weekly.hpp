@@ -48,7 +48,6 @@ namespace daterem
     public:
         inline static unsigned int objCount{};
         inline static const std::filesystem::path DATA_FILE{std::filesystem::path(getenv("APPDATA")) / "daterem" / "Weekly"};
-        inline static const unsigned short LINES_PER_OBJ = 3;
 
     public:
         std::string GetData() const override;

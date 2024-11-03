@@ -41,7 +41,6 @@ namespace daterem
     public:
         inline static unsigned int objCount{};
         inline static const std::filesystem::path DATA_FILE;
-        inline static const unsigned short LINES_PER_OBJ{};
         inline static bool anyEvent = false;
 
     public: 
