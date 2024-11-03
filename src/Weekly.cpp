@@ -22,40 +22,34 @@
 #include <iomanip>
 #include <string>
 #include <sstream>
+#include <memory>
 
 #include "headers/daterem.hpp"
 #include "headers/Log.hpp"
 
-extern std::vector < daterem::Event* > s;
+extern std::vector<std::unique_ptr<daterem::Event>> events;
 extern const time_t now;
 extern const tm *ltm;
 
-daterem::Weekly::Weekly()
-{
-    file.open(DATA_FILE, std::ios::in);
-    if (!file.good()) print(L_ERROR, "Cannot open the data file, create a new reminder first");
 
-    short lineNum = objCount * LINES_PER_OBJ + 1; // information on wich line the object data starts (every object takes 3 lines)
-    short actualLine = 1;
-    std::string line;
-    while(getline(file, line))
-    {
-        if (actualLine == lineNum) m_wDay = (wDay)std::stoi(line);
-        else if (actualLine == lineNum + 1) m_Title = line;
-        else if (actualLine == lineNum + 2) m_Description = line;
-        actualLine++;
-    }
-    file.close();
-    objCount++;
-}
-
-
-daterem::Weekly::Weekly(const char* d, std::string t, std::string des) : Event(t, des)
+daterem::Weekly::Weekly(const char* day, const char* t, const char* des) : Event(t, des)
 {
     bool exitStat = false;
     
-    if (!isdigit(d[0]) || atoi(d) > 6) exitStat = true;
-    else m_wDay = (wDay)atoi(d);
+    if (!std::isdigit(day[0]) || std::stoi(day) > 6) exitStat = true;
+    else m_wDay = static_cast<wDay>(std::stoi(day));
+
+    if (exitStat) print(L_ERROR, "Wrong date format");
+    
+    objCount++;
+}
+
+daterem::Weekly::Weekly(std::string& day, std::string& t, std::string& des) : Event(t, des)
+{
+    bool exitStat = false;
+    
+    if (!std::isdigit(day[0]) || std::stoi(day) > 6) exitStat = true;
+    else m_wDay = static_cast<wDay>(std::stoi(day));
 
     if (exitStat) print(L_ERROR, "Wrong date format");
     
@@ -101,8 +95,8 @@ void daterem::Weekly::Save() const
     else
     {
         file << m_wDay;
-        file << '\n' << m_Title;
-        file << '\n' << m_Description << '\n';
+        file << ';' << m_Title;
+        file << ';' << m_Description << ";\n";
         file.close();
     }
 }
@@ -122,20 +116,21 @@ void daterem::Weekly::Check() const
 }
 
 
-
-
-
 void daterem::Weekly::GetSavedEvents()
 {
-    std::string line;
-    unsigned int numOfLines{};
-    file.open(DATA_FILE, std::ios::in);
-    if (!file.good()) print(L_ERROR, "Cannot open the data file, create a new reminder first");
+   file.open(DATA_FILE, std::ios::in);
+    if (!file.good())
+        print(L_ERROR, "Cannot open the data file, create a new reminder first");
 
-    while (getline(file, line))
-        if (!line.empty()) numOfLines++;
+
+    std::string weekDay, title, desc, lineEnd;
+    while (std::getline(file, weekDay, ';'))
+    {
+        std::getline(file, title, ';');
+        std::getline(file, desc, ';');
+        std::getline(file, lineEnd);
+        events.emplace_back(new Weekly{weekDay, title, desc});
+    }
     
     file.close();
-    for (unsigned int i = 0; i < (numOfLines / LINES_PER_OBJ); i++)
-        s.push_back(new Weekly);
 }

@@ -21,48 +21,77 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
+#include <cstring>
 #include <sstream>
+#include <memory>
 
 #include "headers/daterem.hpp"
 #include "headers/Log.hpp"
 
-extern std::vector < daterem::Event* > s;
+extern std::vector<std::unique_ptr<daterem::Event>> events;
 extern const time_t now;
 extern const tm *ltm;
 
-daterem::Specified::Specified()
+daterem::Specified::Specified(dateint day, dateint month, dateint year, std::string& title, std::string& desc, bool everyYear, bool remBefore)
+    : Event(title, desc), m_Day(day), m_Month(month), m_Year(year), m_EveryYearEvent(everyYear), m_RemBefore(remBefore)
 {
-    file.open(DATA_FILE, std::ios::in);
-    if (!file.good()) print(L_ERROR, "Cannot open the data file, create a new reminder first");
-
-    short lineNum = objCount * LINES_PER_OBJ + 1; // information on wich line the object data starts (every object takes 7 lines)
-    short actualLine = 1;
-    std::string line;
-    while(getline(file, line)) {
-        if (actualLine == lineNum) m_Day = std::stoi(line);
-        else if (actualLine == lineNum + 1) m_Month = std::stoi(line);
-        else if (actualLine == lineNum + 2) m_Year = std::stoi(line);
-        else if (actualLine == lineNum + 3) m_Title = line;
-        else if (actualLine == lineNum + 4) m_Description = line;
-        else if (actualLine == lineNum + 5) m_EveryYearEvent = std::stoi(line);
-        else if (actualLine == lineNum + 6) m_RemBefore = std::stoi(line);
-        actualLine++;
-    }
-    file.close();
     DefineRemBeforeDate();
     insts.push_back(this);
     objCount++;
 }
 
+daterem::Specified::Specified(const char* d, const char* t, const char* des) : Event(t, des)
+{
+    bool exitStat = false;
+    std::string con;
 
-daterem::Specified::Specified(std::string d, std::string t, std::string des) : Event(t, des)
+    if (!(std::strlen(d) == 5 || std::strlen(d) == 10)) exitStat = true; 
+    
+    if (!std::isdigit(d[0]) || !std::isdigit(d[1]) || !std::isdigit(d[3]) || !std::isdigit(d[4])) exitStat = true;
+    else
+    {
+        con = std::string(1, d[0]) + d[1];
+        m_Day = std::stoi(con);
+        con = std::string(1, d[3]) + d[4];
+        m_Month = std::stoi(con);
+        if (m_Day > 31 || m_Day < 1 || m_Month > 12 || m_Month < 1) exitStat = true;
+    }
+
+    if (std::strlen(d) == 5)
+    {
+        if (!(d[2] == '.')) exitStat = true;
+        m_Year = 0;
+        m_EveryYearEvent = true;
+    }
+    else
+    {
+        if (d[2] != '.' || d[5] != '.') exitStat = true;
+        if (!std::isdigit(d[6]) || !std::isdigit(d[7]) || !std::isdigit(d[8]) || !std::isdigit(d[9])) exitStat = true;
+        else
+        {
+            m_EveryYearEvent = false;
+            con = std::string(1, d[6]) + d[7] + d[8] + d[9];
+            m_Year = std::stoi(con);
+            // the year can't be less than current year and grater than current year + 100
+            if (m_Year > ltm->tm_year + 2000 || m_Year < ltm->tm_year + 1900) exitStat = true;
+        }
+    }
+
+    if (exitStat) print(L_ERROR, "Wrong date format");
+
+    m_RemBefore = false;
+    DefineRemBeforeDate();
+    objCount++;
+}
+
+daterem::Specified::Specified(std::string& d, std::string& t, std::string& des) : Event(t, des)
 {
     bool exitStat = false;
     std::string con;
 
     if (!(d.length() == 5 || d.length() == 10)) exitStat = true; 
     
-    if (!isdigit(d[0]) || !isdigit(d[1]) || !isdigit(d[3]) || !isdigit(d[4])) exitStat = true;
+    if (!std::isdigit(d[0]) || !std::isdigit(d[1]) || !std::isdigit(d[3]) || !std::isdigit(d[4])) exitStat = true;
     else
     {
         con = d.substr(0,2);
@@ -81,7 +110,7 @@ daterem::Specified::Specified(std::string d, std::string t, std::string des) : E
     else
     {
         if (d[2] != '.' || d[5] != '.') exitStat = true;
-        if (!isdigit(d[6]) || !isdigit(d[7]) || !isdigit(d[8]) || !isdigit(d[9])) exitStat = true;
+        if (!std::isdigit(d[6]) || !std::isdigit(d[7]) || !std::isdigit(d[8]) || !std::isdigit(d[9])) exitStat = true;
         else
         {
             m_EveryYearEvent = false;
@@ -126,13 +155,13 @@ void daterem::Specified::Save() const
     }
     else
     {
-        file << m_Day;
-        file << '\n' << m_Month;
-        file << '\n' << m_Year;
-        file << '\n' << m_Title;
-        file << '\n' << m_Description;
-        file << '\n' << m_EveryYearEvent;
-        file << '\n' << m_RemBefore << '\n';
+        file << m_Day
+        << ';' << m_Month
+        << ';' << m_Year
+        << ';' << m_Title
+        << ';' << m_Description
+        << ';' << m_EveryYearEvent
+        << ';' << m_RemBefore << ";\n";
         file.close();
     }
 }
@@ -211,18 +240,18 @@ void daterem::Specified::DefineRemBeforeDate()
     }
     else {
         switch (m_Month) {
-            case 1:
-            case 2:
-            case 4:
-            case 6:
-            case 8:
-            case 9:
+            case 1:     [[fallthrough]];
+            case 2:     [[fallthrough]];
+            case 4:     [[fallthrough]];
+            case 6:     [[fallthrough]];
+            case 8:     [[fallthrough]];
+            case 9:     [[fallthrough]];
             case 11:
                 m_sRem[0] = 31 - abs(m_Day - remDaysS);
                 break;
-            case 5:
-            case 7:
-            case 10:
+            case 5:     [[fallthrough]];
+            case 7:     [[fallthrough]];
+            case 10:    [[fallthrough]];
             case 12:
                 m_sRem[0] = 30 - abs(m_Day - remDaysS);
                 break;
@@ -258,18 +287,18 @@ void daterem::Specified::DefineRemBeforeDate()
     }
     else {
         switch (m_Month) {
-            case 1:
-            case 2:
-            case 4:
-            case 6:
-            case 8:
-            case 9:
+            case 1:     [[fallthrough]];
+            case 2:     [[fallthrough]];
+            case 4:     [[fallthrough]];
+            case 6:     [[fallthrough]];
+            case 8:     [[fallthrough]];
+            case 9:     [[fallthrough]];
             case 11:
                 m_fRem[0] = 31 - abs(m_Day - remDaysF);
                 break;
-            case 5:
-            case 7:
-            case 10:
+            case 5:     [[fallthrough]];
+            case 7:     [[fallthrough]];
+            case 10:    [[fallthrough]];
             case 12:
                 m_fRem[0] = 30 - abs(m_Day - remDaysF);
                 break;
@@ -349,17 +378,23 @@ void daterem::Specified::SetRemBefore()
 
 void daterem::Specified::GetSavedEvents()
 {
-    std::string line;
-    unsigned int numOfLines{};
     file.open(DATA_FILE, std::ios::in);
-    if (!file.good()) print(L_ERROR, "Cannot open the data file, create a new reminder first");
+    if (!file.good())
+        print(L_ERROR, "Cannot open the data file, create a new reminder first");
 
-    while (getline(file, line))
-        if (!line.empty()) numOfLines++;
-    
+    std::string day, month, year, title, desc, everyYear, remBefore, lineEnd;
+    while (std::getline(file, day, ';'))
+    {
+        std::getline(file, month, ';');
+        std::getline(file, year, ';');
+        std::getline(file, title, ';');
+        std::getline(file, desc, ';');
+        std::getline(file, everyYear, ';');
+        std::getline(file, remBefore, ';');
+        std::getline(file, lineEnd);
+        events.emplace_back(new Specified{std::stoi(day), std::stoi(month), std:: stoi(year), title, desc, std::stoi(everyYear), std::stoi(remBefore)});
+    }
     file.close();
-    for (unsigned int i = 0; i < (numOfLines / LINES_PER_OBJ); i++)
-        s.push_back(new Specified);
 }
 
 

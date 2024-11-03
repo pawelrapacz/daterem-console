@@ -18,19 +18,23 @@
 */
 
 
+#include <cstring>
+
 #include "headers/Event.hpp"
 #include "headers/Log.hpp"
 
 
-daterem::Event::Event()
+daterem::Event::Event(const char* t, const char* d) : m_Title(t), m_Description(d)
 {
+    if (std::strlen(t) > 20)
+        print(L_ERROR, "The title can be max 20 characters");
     objCount++;
 }
 
-
-daterem::Event::Event(std::string t, std::string d) : m_Title(t), m_Description(d)
+daterem::Event::Event(std::string& t, std::string& d) : m_Title(t), m_Description(d)
 {
-    if (m_Title.length() > 20) print(L_ERROR, "The title can be max 20 characters");
+    if (m_Title.length() > 20)
+        print(L_ERROR, "The title can be max 20 characters");
     objCount++;
 }
 

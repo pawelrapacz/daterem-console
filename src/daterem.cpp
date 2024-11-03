@@ -22,6 +22,7 @@
 #include <iomanip>
 #include <string>
 #include <filesystem>
+#include <memory>
 
 #include "headers/daterem.hpp"
 #include "headers/Log.hpp"
@@ -32,7 +33,7 @@ namespace dr = daterem;
 const time_t now = time(0);
 const tm *ltm = localtime(&now);
 
-extern std::vector < daterem::Event* > s;
+extern std::vector<std::unique_ptr<dr::Event>> events;
 
 
 void dr::ShowHelp(const char* programArg)
@@ -101,9 +102,9 @@ void dr::ListAllEvents() {
 
     // list content
     unsigned int number = 1;
-    for (Event* i : s)
+    for (int i = 0; i < events.size(); i++)
     {
-        std::cout << std::left << std::setw(6) << number << i->GetData();
+        std::cout << std::left << std::setw(6) << number << events[i]->GetData();
         number++;
     }
 }
@@ -140,15 +141,14 @@ void dr::SaveAllEvents()
     if (!file.good()) print(L_ERROR, "Can not save, file inaccesible");
     file.close();
 
-    for (Event* i : s)
-        i->Save();
+    for (int i = 0; i < events.size(); i++)
+        events[i]->Save();
 }
 
 
 
 void dr::DeleteEvent(unsigned int n) {
-    delete s[n];
-    s.erase(s.begin() + n);
+    events.erase(events.begin() + n);
 }
 
 
@@ -167,8 +167,8 @@ void dr::GetAllSavedEvents()
 void dr::CheckEvents()
 {
     std::cout << "[" << GetLocalDate() << "]" << "\n\n";
-    for (Event* i : s)
-        i->Check();
+    for (int i = 0; i < events.size(); i++)
+        events[i]->Check();
 
     if (!Event::anyEvent) print(L_NONE, "No reminders scheduled for today");
 }

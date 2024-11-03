@@ -28,12 +28,13 @@ namespace daterem
 {
     class Specified : public Event
     {
+    using dateint = unsigned short;
     private:
-        unsigned short m_Day;
-        unsigned short m_Month;
-        unsigned short m_Year;
-        unsigned short m_fRem[3];
-        unsigned short m_sRem[3];
+        dateint m_Day;
+        dateint m_Month;
+        dateint m_Year;
+        dateint m_fRem[3];
+        dateint m_sRem[3];
         bool m_EveryYearEvent;
         bool m_RemBefore;
 
@@ -43,8 +44,9 @@ namespace daterem
         bool CheckOutOfDate() const;
 
     public:
-        Specified();
-        Specified(std::string, std::string, std::string);
+        Specified(dateint day, dateint month, dateint year, std::string& title, std::string& desc, bool everyYear, bool remBefore);
+        Specified(std::string&, std::string&, std::string&);
+        Specified(const char*, const char*, const char*);
         ~Specified();
 
     public:

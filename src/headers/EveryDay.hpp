@@ -27,14 +27,14 @@ namespace daterem
     class EveryDay : public Event
     {
     public:
-        EveryDay();
-        EveryDay(std::string, std::string);
+        EveryDay(std::string&, std::string&);
+        EveryDay(const char*, const char*);
         ~EveryDay();
 
     public:
         inline static unsigned int objCount{};
         inline static const std::filesystem::path DATA_FILE{std::filesystem::path(getenv("APPDATA")) / "daterem" / "EveryDay"};
-        inline static const unsigned short LINES_PER_OBJ = 2;
+        inline static constexpr unsigned short LINES_PER_OBJ = 2;
 
     public:
         std::string GetData() const override;

@@ -32,8 +32,8 @@ namespace daterem
         
         std::string m_Title; // max 20 characters
         std::string m_Description;
-        Event();
-        Event(std::string, std::string);
+        Event(std::string&, std::string&);
+        Event(const char*, const char*);
 
     public:
         virtual ~Event();

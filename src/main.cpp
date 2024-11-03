@@ -21,13 +21,14 @@
 #include <vector>
 #include <windows.h>
 #include <cstring>
+#include <memory>
 
 #include "headers/daterem.hpp"
 #include "headers/Log.hpp"
 
 namespace dr = daterem;
 
-std::vector < dr::Event* > s;
+std::vector<std::unique_ptr<dr::Event>> events;
 
 int main(const int argc, const char* argv[])
 {

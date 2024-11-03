@@ -41,8 +41,8 @@ namespace daterem
         wDay m_wDay;
 
     public:
-        Weekly();
-        Weekly(const char*, std::string, std::string);
+        Weekly(std::string&, std::string&, std::string&);
+        Weekly(const char*, const char*, const char*);
         ~Weekly();
 
     public:
