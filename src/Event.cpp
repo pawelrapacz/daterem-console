@@ -24,16 +24,16 @@
 #include "Log.hpp"
 
 
-daterem::Event::Event(const char* t, const char* d) : m_Title(t), m_Description(d)
+daterem::Event::Event(const char* t, const char* d) : _title(t), _description(d)
 {
     if (std::strlen(t) > 20)
         print(L_ERROR, "The title can be max 20 characters");
     objCount++;
 }
 
-daterem::Event::Event(std::string& t, std::string& d) : m_Title(t), m_Description(d)
+daterem::Event::Event(std::string& t, std::string& d) : _title(t), _description(d)
 {
-    if (m_Title.length() > 20)
+    if (_title.length() > 20)
         print(L_ERROR, "The title can be max 20 characters");
     objCount++;
 }

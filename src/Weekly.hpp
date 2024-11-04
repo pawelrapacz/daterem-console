@@ -27,7 +27,7 @@ namespace daterem
     class Weekly : public Event
     {
     private:
-        enum wDay : unsigned short
+        enum WeekDay : unsigned short
         {
             SUNDAY,
             MONDAY,
@@ -38,15 +38,14 @@ namespace daterem
             SATURDAY
         };
 
-        wDay m_wDay;
+        WeekDay _wDay;
 
     public:
         Weekly(std::string&, std::string&, std::string&);
         Weekly(const char*, const char*, const char*);
-        ~Weekly();
+        ~Weekly() = default;
 
     public:
-        inline static unsigned int objCount{};
         inline static const std::filesystem::path DATA_FILE{std::filesystem::path(getenv("APPDATA")) / "daterem" / "Weekly"};
 
     public:

@@ -30,13 +30,13 @@ namespace daterem
     {
     using dateint = unsigned short;
     private:
-        dateint m_Day;
-        dateint m_Month;
-        dateint m_Year;
-        dateint m_fRem[3];
-        dateint m_sRem[3];
-        bool m_EveryYearEvent;
-        bool m_RemBefore;
+        dateint _day;
+        dateint _month;
+        dateint _year;
+        dateint _fRem[3];
+        dateint _sRem[3];
+        bool _everyYearEvent {false};
+        bool _remBefore {false};
 
     private:
         void DefineRemBeforeDate();
@@ -47,12 +47,11 @@ namespace daterem
         Specified(dateint day, dateint month, dateint year, std::string& title, std::string& desc, bool everyYear, bool remBefore);
         Specified(std::string&, std::string&, std::string&);
         Specified(const char*, const char*, const char*);
-        ~Specified();
+        ~Specified() = default;
 
     public:
-        inline static unsigned int objCount{};
         inline static const std::filesystem::path DATA_FILE{std::filesystem::path(getenv("APPDATA")) / "daterem" / "Specified"};
-        inline static std::vector < Specified* > insts; // table of pointers to all class instances
+        inline static std::vector<Specified*> insts; // table of pointers to all class instances
 
     public:
         std::string GetData() const override;

@@ -32,28 +32,20 @@ extern const time_t now;
 extern const tm *ltm;
 
 
-daterem::EveryDay::EveryDay(const char* title, const char* desc) : Event(title, desc)
-{
-    objCount++;
-}
+daterem::EveryDay::EveryDay(const char* title, const char* desc)
+    : Event(title, desc) {}
 
-daterem::EveryDay::EveryDay(std::string& title, std::string& desc) : Event(title, desc)
-{
-    objCount++;
-}
+daterem::EveryDay::EveryDay(std::string& title, std::string& desc)
+    : Event(title, desc) {}
 
 
-daterem::EveryDay::~EveryDay()
-{
-    objCount--;
-}
 
 
 std::string daterem::EveryDay::GetData() const
 {
     std::ostringstream oss;
     oss << std::left << std::setw(15) << std::setfill(' ') << "Everyday";
-    oss << std::setw(25) << m_Title << m_Description << std::endl;
+    oss << std::setw(25) << _title << _description << std::endl;
     return oss.str();
 }
 
@@ -67,7 +59,7 @@ void daterem::EveryDay::Save() const
     }
     else
     {
-        file << m_Title << ';' << m_Description << ";\n";
+        file << _title << ';' << _description << ";\n";
         file.close();
     }
 }
@@ -75,8 +67,8 @@ void daterem::EveryDay::Save() const
 
 void daterem::EveryDay::Check() const
 {
-    Event::anyEvent = true;
-    std::cout << std::left << std::setw(25) << std::setfill(' ') << m_Title << m_Description << std::endl;
+    Event::_anyEvent = true;
+    std::cout << std::left << std::setw(25) << std::setfill(' ') << _title << _description << std::endl;
 }
 
 

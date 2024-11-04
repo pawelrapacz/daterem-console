@@ -31,7 +31,7 @@ enum Level : unsigned short
 #include <iostream>
 #include <windows.h>
 
-template < typename T > inline void print(Level level, T message)
+template<typename T> inline void print(Level level, T message)
 {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     switch (level)

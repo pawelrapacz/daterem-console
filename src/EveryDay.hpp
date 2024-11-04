@@ -29,11 +29,11 @@ namespace daterem
     public:
         EveryDay(std::string&, std::string&);
         EveryDay(const char*, const char*);
-        ~EveryDay();
+        ~EveryDay() = default;
 
     public:
-        inline static unsigned int objCount{};
         inline static const std::filesystem::path DATA_FILE{std::filesystem::path(getenv("APPDATA")) / "daterem" / "EveryDay"};
+
     public:
         std::string GetData() const override;
         void Save() const override;

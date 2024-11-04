@@ -33,11 +33,10 @@ extern const time_t now;
 extern const tm *ltm;
 
 daterem::Specified::Specified(dateint day, dateint month, dateint year, std::string& title, std::string& desc, bool everyYear, bool remBefore)
-    : Event(title, desc), m_Day(day), m_Month(month), m_Year(year), m_EveryYearEvent(everyYear), m_RemBefore(remBefore)
+    : Event(title, desc), _day(day), _month(month), _year(year), _everyYearEvent(everyYear), _remBefore(remBefore)
 {
     DefineRemBeforeDate();
     insts.push_back(this);
-    objCount++;
 }
 
 daterem::Specified::Specified(const char* d, const char* t, const char* des) : Event(t, des)
@@ -51,17 +50,17 @@ daterem::Specified::Specified(const char* d, const char* t, const char* des) : E
     else
     {
         con = std::string(1, d[0]) + d[1];
-        m_Day = std::stoi(con);
+        _day = std::stoi(con);
         con = std::string(1, d[3]) + d[4];
-        m_Month = std::stoi(con);
-        if (m_Day > 31 || m_Day < 1 || m_Month > 12 || m_Month < 1) exitStat = true;
+        _month = std::stoi(con);
+        if (_day > 31 || _day < 1 || _month > 12 || _month < 1) exitStat = true;
     }
 
     if (std::strlen(d) == 5)
     {
         if (!(d[2] == '.')) exitStat = true;
-        m_Year = 0;
-        m_EveryYearEvent = true;
+        _year = 0;
+        _everyYearEvent = true;
     }
     else
     {
@@ -69,19 +68,17 @@ daterem::Specified::Specified(const char* d, const char* t, const char* des) : E
         if (!std::isdigit(d[6]) || !std::isdigit(d[7]) || !std::isdigit(d[8]) || !std::isdigit(d[9])) exitStat = true;
         else
         {
-            m_EveryYearEvent = false;
+            _everyYearEvent = false;
             con = std::string(1, d[6]) + d[7] + d[8] + d[9];
-            m_Year = std::stoi(con);
+            _year = std::stoi(con);
             // the year can't be less than current year and grater than current year + 100
-            if (m_Year > ltm->tm_year + 2000 || m_Year < ltm->tm_year + 1900) exitStat = true;
+            if (_year > ltm->tm_year + 2000 || _year < ltm->tm_year + 1900) exitStat = true;
         }
     }
 
     if (exitStat) print(L_ERROR, "Wrong date format");
 
-    m_RemBefore = false;
     DefineRemBeforeDate();
-    objCount++;
 }
 
 daterem::Specified::Specified(std::string& d, std::string& t, std::string& des) : Event(t, des)
@@ -95,17 +92,17 @@ daterem::Specified::Specified(std::string& d, std::string& t, std::string& des) 
     else
     {
         con = d.substr(0,2);
-        m_Day = std::stoi(con);
+        _day = std::stoi(con);
         con = d.substr(3, 2);
-        m_Month = std::stoi(con);
-        if (m_Day > 31 || m_Day < 1 || m_Month > 12 || m_Month < 1) exitStat = true;
+        _month = std::stoi(con);
+        if (_day > 31 || _day < 1 || _month > 12 || _month < 1) exitStat = true;
     }
 
     if (d.length() == 5)
     {
         if (!(d[2] == '.')) exitStat = true;
-        m_Year = 0;
-        m_EveryYearEvent = true;
+        _year = 0;
+        _everyYearEvent = true;
     }
     else
     {
@@ -113,27 +110,18 @@ daterem::Specified::Specified(std::string& d, std::string& t, std::string& des) 
         if (!std::isdigit(d[6]) || !std::isdigit(d[7]) || !std::isdigit(d[8]) || !std::isdigit(d[9])) exitStat = true;
         else
         {
-            m_EveryYearEvent = false;
+            _everyYearEvent = false;
             con = d.substr(6,4);
-            m_Year = std::stoi(con);
+            _year = std::stoi(con);
             // the year can't be less than current year and grater than current year + 100
-            if (m_Year > ltm->tm_year + 2000 || m_Year < ltm->tm_year + 1900) exitStat = true;
+            if (_year > ltm->tm_year + 2000 || _year < ltm->tm_year + 1900) exitStat = true;
         }
     }
 
     if (exitStat) print(L_ERROR, "Wrong date format");
 
-    m_RemBefore = false;
     DefineRemBeforeDate();
-    objCount++;
 }
-
-
-daterem::Specified::~Specified()
-{
-    objCount--;
-}
-
 
 
 
@@ -142,7 +130,7 @@ std::string daterem::Specified::GetData() const
 {
     std::ostringstream oss;
     oss << std::left << std::setw(15) << std::setfill(' ') << GetFormatedDate()
-    << std::setw(25) << m_Title << m_Description << std::endl;
+    << std::setw(25) << _title << _description << std::endl;
     return oss.str();
 }
 
@@ -155,13 +143,13 @@ void daterem::Specified::Save() const
     }
     else
     {
-        file << m_Day
-        << ';' << m_Month
-        << ';' << m_Year
-        << ';' << m_Title
-        << ';' << m_Description
-        << ';' << m_EveryYearEvent
-        << ';' << m_RemBefore << ";\n";
+        file << _day
+        << ';' << _month
+        << ';' << _year
+        << ';' << _title
+        << ';' << _description
+        << ';' << _everyYearEvent
+        << ';' << _remBefore << ";\n";
         file.close();
     }
 }
@@ -173,31 +161,31 @@ void daterem::Specified::Check() const
     bool before = false;
 
 
-    if (m_EveryYearEvent)
+    if (_everyYearEvent)
     {
-        if (m_Day == ltm->tm_mday && m_Month == ltm->tm_mon + 1)
+        if (_day == ltm->tm_mday && _month == ltm->tm_mon + 1)
             today = true;
     }
     else
     {
-        if (m_Day == ltm->tm_mday && m_Month == ltm->tm_mon + 1 && m_Year == ltm->tm_year + 1900)
+        if (_day == ltm->tm_mday && _month == ltm->tm_mon + 1 && _year == ltm->tm_year + 1900)
             today = true;
     }
 
-    if (m_RemBefore)
+    if (_remBefore)
     {
-        if (m_EveryYearEvent)
+        if (_everyYearEvent)
         {
-            if (m_fRem[0] == ltm->tm_mday && m_fRem[1] == ltm->tm_mon + 1)
+            if (_fRem[0] == ltm->tm_mday && _fRem[1] == ltm->tm_mon + 1)
                 before = true;
-            else if (m_sRem[0] == ltm->tm_mday && m_sRem[1] == ltm->tm_mon + 1)
+            else if (_sRem[0] == ltm->tm_mday && _sRem[1] == ltm->tm_mon + 1)
                 before = true;
         }
         else
         {
-            if (m_fRem[0] == ltm->tm_mday && m_fRem[1] == ltm->tm_mon + 1 && m_fRem[2] == ltm->tm_year + 1900)
+            if (_fRem[0] == ltm->tm_mday && _fRem[1] == ltm->tm_mon + 1 && _fRem[2] == ltm->tm_year + 1900)
                 before = true;
-            else if (m_sRem[0] == ltm->tm_mday && m_sRem[1] == ltm->tm_mon + 1 && m_sRem[2] == ltm->tm_year + 1900)
+            else if (_sRem[0] == ltm->tm_mday && _sRem[1] == ltm->tm_mon + 1 && _sRem[2] == ltm->tm_year + 1900)
                 before = true;
         }
     }
@@ -205,14 +193,14 @@ void daterem::Specified::Check() const
 
     if (today)
     {
-        Event::anyEvent = true;
-        std::cout << std::left << std::setw(25) << std::setfill(' ') << m_Title << m_Description << std::endl;
+        Event::_anyEvent = true;
+        std::cout << std::left << std::setw(25) << std::setfill(' ') << _title << _description << std::endl;
     }
 
     if (before)
     {
-        Event::anyEvent = true;
-        std::cout << std::left << std::setw(25) << std::setfill(' ') << m_Title << m_Description 
+        Event::_anyEvent = true;
+        std::cout << std::left << std::setw(25) << std::setfill(' ') << _title << _description 
         << " is scheduled for " << GetFormatedDate().erase(0, 1) << std::endl;
     }
 }
@@ -223,23 +211,23 @@ void daterem::Specified::Check() const
 
 void daterem::Specified::DefineRemBeforeDate()
 {
-    if (m_RemBefore)
+    if (_remBefore)
     {
     // defining firstRemDate and second one
     static const unsigned short remDaysF = 7, remDaysS = 2; // days to back reminders the date
     unsigned short y; // stands for year (for determining dates in leap years)
-    m_EveryYearEvent ? y = ltm->tm_year + 1900 : y = m_Year;
+    _everyYearEvent ? y = ltm->tm_year + 1900 : y = _year;
 
     // defining remDaysS
     // day
 
-    if (m_Day > remDaysS) {
-        m_sRem[0] = m_Day - remDaysS;
-        m_sRem[1] = m_Month;
-        if (!m_EveryYearEvent) m_sRem[2] = m_Year;
+    if (_day > remDaysS) {
+        _sRem[0] = _day - remDaysS;
+        _sRem[1] = _month;
+        if (!_everyYearEvent) _sRem[2] = _year;
     }
     else {
-        switch (m_Month) {
+        switch (_month) {
             case 1:     [[fallthrough]];
             case 2:     [[fallthrough]];
             case 4:     [[fallthrough]];
@@ -247,46 +235,46 @@ void daterem::Specified::DefineRemBeforeDate()
             case 8:     [[fallthrough]];
             case 9:     [[fallthrough]];
             case 11:
-                m_sRem[0] = 31 - abs(m_Day - remDaysS);
+                _sRem[0] = 31 - abs(_day - remDaysS);
                 break;
             case 5:     [[fallthrough]];
             case 7:     [[fallthrough]];
             case 10:    [[fallthrough]];
             case 12:
-                m_sRem[0] = 30 - abs(m_Day - remDaysS);
+                _sRem[0] = 30 - abs(_day - remDaysS);
                 break;
             case 3:
                 if ((y % 4 == 0 && y % 100 != 0) || y % 400 == 0)
-                    m_sRem[0] = 29 - abs(m_Day - remDaysS);
+                    _sRem[0] = 29 - abs(_day - remDaysS);
                 else
-                    m_sRem[0] = 28 - abs(m_Day - remDaysS);
+                    _sRem[0] = 28 - abs(_day - remDaysS);
                 break;
         }
 
         // month and year
         
-        if (m_Month == 1) {
-            m_sRem[1] = 12;
-            if (!m_EveryYearEvent)
-                m_sRem[2] = m_Year - 1;
+        if (_month == 1) {
+            _sRem[1] = 12;
+            if (!_everyYearEvent)
+                _sRem[2] = _year - 1;
         }
         else {
-            m_sRem[1] = m_Month - 1;
-            if (!m_EveryYearEvent)
-                m_sRem[2] = m_Year;
+            _sRem[1] = _month - 1;
+            if (!_everyYearEvent)
+                _sRem[2] = _year;
         }
     }
 
     // defining remDaysF
     // day
 
-    if (m_Day > remDaysF) {
-        m_fRem[0] = m_Day - remDaysF;
-        m_fRem[1] = m_Month;
-        if (!m_EveryYearEvent) m_fRem[2] = m_Year;
+    if (_day > remDaysF) {
+        _fRem[0] = _day - remDaysF;
+        _fRem[1] = _month;
+        if (!_everyYearEvent) _fRem[2] = _year;
     }
     else {
-        switch (m_Month) {
+        switch (_month) {
             case 1:     [[fallthrough]];
             case 2:     [[fallthrough]];
             case 4:     [[fallthrough]];
@@ -294,33 +282,33 @@ void daterem::Specified::DefineRemBeforeDate()
             case 8:     [[fallthrough]];
             case 9:     [[fallthrough]];
             case 11:
-                m_fRem[0] = 31 - abs(m_Day - remDaysF);
+                _fRem[0] = 31 - abs(_day - remDaysF);
                 break;
             case 5:     [[fallthrough]];
             case 7:     [[fallthrough]];
             case 10:    [[fallthrough]];
             case 12:
-                m_fRem[0] = 30 - abs(m_Day - remDaysF);
+                _fRem[0] = 30 - abs(_day - remDaysF);
                 break;
             case 3:
                     if ((y % 4 == 0 && y % 100 != 0) || y % 400 == 0)
-                        m_fRem[0] = 29 - abs(m_Day - remDaysF);
+                        _fRem[0] = 29 - abs(_day - remDaysF);
                     else
-                        m_fRem[0] = 28 - abs(m_Day - remDaysF);
+                        _fRem[0] = 28 - abs(_day - remDaysF);
                 break;
         }
 
         // month and year
 
-        if (m_Month == 1) {
-            m_fRem[1] = 12;
-            if (!m_EveryYearEvent)
-                m_fRem[2] = m_Year - 1;
+        if (_month == 1) {
+            _fRem[1] = 12;
+            if (!_everyYearEvent)
+                _fRem[2] = _year - 1;
         }
         else {
-            m_fRem[1] = m_Month - 1;
-            if (!m_EveryYearEvent)
-                m_fRem[2] = m_Year;
+            _fRem[1] = _month - 1;
+            if (!_everyYearEvent)
+                _fRem[2] = _year;
         }
     }
     }
@@ -331,14 +319,14 @@ bool daterem::Specified::CheckOutOfDate() const
 {
     bool outDated = false;
 
-    if (!m_EveryYearEvent)
+    if (!_everyYearEvent)
     {
-        if (m_Year < ltm->tm_year + 1900) outDated = true;
-        else if (m_Month < ltm->tm_mon + 1 && m_Year == ltm->tm_year + 1900) outDated = true;
-        else if (m_Day < ltm->tm_mday && m_Month == ltm->tm_mon + 1 && m_Year == ltm->tm_year + 1900) outDated = true;
+        if (_year < ltm->tm_year + 1900) outDated = true;
+        else if (_month < ltm->tm_mon + 1 && _year == ltm->tm_year + 1900) outDated = true;
+        else if (_day < ltm->tm_mday && _month == ltm->tm_mon + 1 && _year == ltm->tm_year + 1900) outDated = true;
     }
     if (outDated)
-        std::cout << GetFormatedDate() << " - " << m_Title << " - " << m_Description << std::endl;
+        std::cout << GetFormatedDate() << " - " << _title << " - " << _description << std::endl;
 
     return outDated;
 }
@@ -347,15 +335,15 @@ bool daterem::Specified::CheckOutOfDate() const
 std::string daterem::Specified::GetFormatedDate() const
 {
     std::string date;
-    if (m_RemBefore) date += "*";
+    if (_remBefore) date += "*";
 
-    if (m_Day <= 9) date += "0" + std::to_string(m_Day) + ".";
-    else date += std::to_string(m_Day) + ".";
+    if (_day <= 9) date += "0" + std::to_string(_day) + ".";
+    else date += std::to_string(_day) + ".";
 
-    if (m_Month <= 9) date += "0" + std::to_string(m_Month);
-    else date += std::to_string(m_Month);
+    if (_month <= 9) date += "0" + std::to_string(_month);
+    else date += std::to_string(_month);
 
-    if (!m_EveryYearEvent) date += "." + std::to_string(m_Year);
+    if (!_everyYearEvent) date += "." + std::to_string(_year);
 
     return date;
 }
@@ -363,13 +351,13 @@ std::string daterem::Specified::GetFormatedDate() const
 
 void daterem::Specified::SetEveryYearEvent()
 {
-   m_EveryYearEvent = true;
+   _everyYearEvent = true;
 }
 
 
 void daterem::Specified::SetRemBefore()
 {
-    m_RemBefore = m_RemBefore ? false : true;
+    _remBefore = !_remBefore;
 }
 
 
@@ -392,7 +380,15 @@ void daterem::Specified::GetSavedEvents()
         std::getline(file, everyYear, ';');
         std::getline(file, remBefore, ';');
         std::getline(file, lineEnd);
-        events.emplace_back(new Specified{std::stoi(day), std::stoi(month), std:: stoi(year), title, desc, std::stoi(everyYear), std::stoi(remBefore)});
+        events.emplace_back(new Specified{
+            static_cast<dateint>(std::stoi(day)),
+            static_cast<dateint>(std::stoi(month)),
+            static_cast<dateint>(std:: stoi(year)),
+            title,
+            desc,
+            static_cast<bool>(std::stoi(everyYear)),
+            static_cast<bool>(std::stoi(remBefore))
+        });
     }
     file.close();
 }

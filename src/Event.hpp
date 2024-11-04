@@ -30,18 +30,20 @@ namespace daterem
     protected:
         inline static std::fstream file;
         
-        std::string m_Title; // max 20 characters
-        std::string m_Description;
+        std::string _title; // max 20 characters
+        std::string _description;
         Event(std::string&, std::string&);
         Event(const char*, const char*);
+        inline static bool _anyEvent = false;
+        inline static std::size_t _objCount{};
 
     public:
         virtual ~Event();
 
     public:
-        inline static unsigned int objCount{};
-        inline static const std::filesystem::path DATA_FILE;
-        inline static bool anyEvent = false;
+        static const std::filesystem::path DATA_FILE;
+        inline static const bool& anyEvent = _anyEvent;
+        inline static std::size_t& objCount = _objCount;
 
     public: 
         virtual std::string GetData() const = 0;

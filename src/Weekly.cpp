@@ -37,11 +37,9 @@ daterem::Weekly::Weekly(const char* day, const char* t, const char* des) : Event
     bool exitStat = false;
     
     if (!std::isdigit(day[0]) || std::stoi(day) > 6) exitStat = true;
-    else m_wDay = static_cast<wDay>(std::stoi(day));
+    else _wDay = static_cast<WeekDay>(std::stoi(day));
 
     if (exitStat) print(L_ERROR, "Wrong date format");
-    
-    objCount++;
 }
 
 daterem::Weekly::Weekly(std::string& day, std::string& t, std::string& des) : Event(t, des)
@@ -49,19 +47,10 @@ daterem::Weekly::Weekly(std::string& day, std::string& t, std::string& des) : Ev
     bool exitStat = false;
     
     if (!std::isdigit(day[0]) || std::stoi(day) > 6) exitStat = true;
-    else m_wDay = static_cast<wDay>(std::stoi(day));
+    else _wDay = static_cast<WeekDay>(std::stoi(day));
 
     if (exitStat) print(L_ERROR, "Wrong date format");
-    
-    objCount++;
 }
-
-
-daterem::Weekly::~Weekly()
-{
-    objCount--;
-}
-
 
 
 
@@ -73,14 +62,14 @@ std::string daterem::Weekly::GetData() const
         "Sunday",
         "Monday",
         "Tuesday",
-        "Wednsday",
+        "Wednesday",
         "Thursday",
         "Friday",
         "Saturday"
     };
     std::ostringstream oss;
-    oss << std::left << std::setw(15) << std::setfill(' ') << days[m_wDay]
-    << std::setw(25) << m_Title << m_Description << std::endl;
+    oss << std::left << std::setw(15) << std::setfill(' ') << days[_wDay]
+    << std::setw(25) << _title << _description << std::endl;
     return oss.str();
 }
 
@@ -94,9 +83,9 @@ void daterem::Weekly::Save() const
     }
     else
     {
-        file << m_wDay;
-        file << ';' << m_Title;
-        file << ';' << m_Description << ";\n";
+        file << _wDay;
+        file << ';' << _title;
+        file << ';' << _description << ";\n";
         file.close();
     }
 }
@@ -104,14 +93,11 @@ void daterem::Weekly::Save() const
 
 void daterem::Weekly::Check() const
 {
-    bool checked = false;
 
-    if (m_wDay == ltm->tm_wday) checked = true;
-
-    if (checked)
+    if (_wDay == ltm->tm_wday)
     {
-        Event::anyEvent = true;
-        std::cout << std::left << std::setw(25) << std::setfill(' ') << m_Title << m_Description << std::endl;
+        Event::_anyEvent = true;
+        std::cout << std::left << std::setw(25) << std::setfill(' ') << _title << _description << std::endl;
     }
 }
 
