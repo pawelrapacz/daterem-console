@@ -1,5 +1,5 @@
-![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/pawelrapacz/daterem-console)
-![GitHub](https://img.shields.io/github/license/pawelrapacz/daterem-console?color=greem)
+[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/pawelrapacz/daterem-console)](https://github.com/pawelrapacz/daterem-console/releases/latest)
+[![GitHub](https://img.shields.io/github/license/pawelrapacz/daterem-console?color=greem)](https://github.com/pawelrapacz/daterem-console/blob/master/LICENSE)
 # daterem
 
 > Helps you keep track your plans and reminds you your daily things.
